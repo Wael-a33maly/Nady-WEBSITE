@@ -1,0 +1,6 @@
+{
+  "name": "حارس ونقاء - شركة أمن ونظافة | Hares & Niqaa Security & Cleaning",
+  "description": "شركة رائدة في تقديم خدمات الحراسة الأمنية، النظافة العامة، والصيانة الشاملة للمؤسسات والشركات والأفراد بأعلى معايير الجودة العالمية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
