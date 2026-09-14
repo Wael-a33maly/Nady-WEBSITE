@@ -32,6 +32,52 @@ import {
   initialWhyUsFeatures,
   initialClientLogos,
 } from '../data/initialData';
+import {
+  fetchAllContent,
+  loginAdminApi,
+  verifyAdminSessionApi,
+  logoutAdminApi,
+  updateSettingsApi,
+  submitQuoteApi,
+  fetchQuotesApi,
+  updateQuoteStatusApi,
+  deleteQuoteApi,
+  submitInquiryApi,
+  fetchInquiriesApi,
+  updateInquiryStatusApi,
+  deleteInquiryApi,
+  submitJobApplicationApi,
+  fetchJobApplicationsApi,
+  updateJobAppStatusApi,
+  deleteJobAppApi,
+  createServiceApi,
+  updateServiceApi,
+  deleteServiceApi,
+  createProjectApi,
+  updateProjectApi,
+  deleteProjectApi,
+  createTeamMemberApi,
+  updateTeamMemberApi,
+  deleteTeamMemberApi,
+  createSubsidiaryApi,
+  updateSubsidiaryApi,
+  deleteSubsidiaryApi,
+  createSubsidiaryCategoryApi,
+  updateSubsidiaryCategoryApi,
+  deleteSubsidiaryCategoryApi,
+  createWhyUsFeatureApi,
+  updateWhyUsFeatureApi,
+  deleteWhyUsFeatureApi,
+  createJobPositionApi,
+  updateJobPositionApi,
+  deleteJobPositionApi,
+  createClientLogoApi,
+  updateClientLogoApi,
+  deleteClientLogoApi,
+  createTestimonialApi,
+  updateTestimonialApi,
+  deleteTestimonialApi,
+} from '../services/api';
 
 interface AppContextType {
   lang: Language;
@@ -41,7 +87,7 @@ interface AppContextType {
   setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
   isAdmin: boolean;
-  loginAdmin: (pass: string) => boolean;
+  loginAdmin: (pass: string) => Promise<boolean>;
   logoutAdmin: () => void;
   
   settings: SiteSettings;
@@ -318,7 +364,70 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('hn_settings', JSON.stringify(settings));
   }, [settings]);
 
-  // Persist state
+  // Initial Content Fetch from Hostinger PHP/MySQL API
+  useEffect(() => {
+    let isMounted = true;
+    const loadContentFromApi = async () => {
+      try {
+        const data = await fetchAllContent();
+        if (!isMounted || !data) return;
+        if (data.settings && Object.keys(data.settings).length > 0) {
+          setSettings((prev) => ({ ...prev, ...data.settings }));
+        }
+        if (data.services && data.services.length > 0) setServices(data.services);
+        if (data.projects && data.projects.length > 0) setProjects(data.projects);
+        if (data.team && data.team.length > 0) setTeam(data.team);
+        if (data.subsidiaries && data.subsidiaries.length > 0) setSubsidiaries(data.subsidiaries);
+        if (data.subsidiaryCategories && data.subsidiaryCategories.length > 0) setSubsidiaryCategories(data.subsidiaryCategories);
+        if (data.whyUsFeatures && data.whyUsFeatures.length > 0) setWhyUsFeatures(data.whyUsFeatures);
+        if (data.jobPositions && data.jobPositions.length > 0) setJobPositions(data.jobPositions);
+        if (data.clientLogos && data.clientLogos.length > 0) setClientLogos(data.clientLogos);
+        if (data.testimonials && data.testimonials.length > 0) setTestimonials(data.testimonials);
+      } catch (err) {
+        console.warn('[AppContext] API initial fetch fallback:', err);
+      }
+    };
+    loadContentFromApi();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Sync admin data with API when admin is logged in
+  useEffect(() => {
+    if (!isAdmin) return;
+    let isMounted = true;
+    const syncAdminData = async () => {
+      try {
+        const valid = await verifyAdminSessionApi();
+        if (!isMounted) return;
+        if (!valid && localStorage.getItem('hn_admin_token')) {
+          setIsAdmin(false);
+          localStorage.removeItem('hn_admin_auth');
+          localStorage.removeItem('hn_admin_token');
+          return;
+        }
+
+        const [quotesData, inquiriesData, jobAppsData] = await Promise.all([
+          fetchQuotesApi(),
+          fetchInquiriesApi(),
+          fetchJobApplicationsApi(),
+        ]);
+        if (!isMounted) return;
+        if (quotesData && quotesData.length > 0) setQuotes(quotesData);
+        if (inquiriesData && inquiriesData.length > 0) setInquiries(inquiriesData);
+        if (jobAppsData && jobAppsData.length > 0) setJobApplications(jobAppsData);
+      } catch (err) {
+        console.warn('[AppContext] Admin sync fallback:', err);
+      }
+    };
+    syncAdminData();
+    return () => {
+      isMounted = false;
+    };
+  }, [isAdmin]);
+
+  // Persist state to localStorage as fast client-side cache
   useEffect(() => { localStorage.setItem('hn_subsidiary_categories', JSON.stringify(subsidiaryCategories)); }, [subsidiaryCategories]);
   useEffect(() => { localStorage.setItem('hn_subsidiaries', JSON.stringify(subsidiaries)); }, [subsidiaries]);
   useEffect(() => { localStorage.setItem('hn_why_us_features', JSON.stringify(whyUsFeatures)); }, [whyUsFeatures]);
@@ -338,7 +447,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setTheme = (t: ThemeMode) => setThemeState(t);
   const toggleTheme = () => setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
-  const loginAdmin = (pass: string) => {
+  const loginAdmin = async (pass: string): Promise<boolean> => {
+    try {
+      const res = await loginAdminApi(pass);
+      if (res && res.success) {
+        setIsAdmin(true);
+        return true;
+      }
+    } catch {
+      // Fallback
+    }
     if (pass === 'admin' || pass === 'admin123' || pass === '123456') {
       setIsAdmin(true);
       localStorage.setItem('hn_admin_auth', 'true');
@@ -348,59 +466,120 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const logoutAdmin = () => {
+    logoutAdminApi().catch(() => {});
     setIsAdmin(false);
     localStorage.removeItem('hn_admin_auth');
   };
 
   const updateSettings = (newS: Partial<SiteSettings>) => {
-    setSettings((prev) => ({ ...prev, ...newS }));
+    setSettings((prev) => {
+      const updated = { ...prev, ...newS };
+      updateSettingsApi(updated).catch(() => {});
+      return updated;
+    });
   };
 
   const changeColorPreset = (preset: ColorPreset, hex: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      themePreset: preset,
-      primaryColorHex: hex,
-    }));
+    setSettings((prev) => {
+      const updated = {
+        ...prev,
+        themePreset: preset,
+        primaryColorHex: hex,
+      };
+      updateSettingsApi(updated).catch(() => {});
+      return updated;
+    });
   };
 
-  const addSubsidiaryCategory = (cat: SubsidiaryCategory) => setSubsidiaryCategories((prev) => [...prev, cat]);
+  const addSubsidiaryCategory = (cat: SubsidiaryCategory) => {
+    setSubsidiaryCategories((prev) => [...prev, cat]);
+    createSubsidiaryCategoryApi(cat).catch(() => {});
+  };
+
   const updateSubsidiaryCategory = (id: string, cat: Partial<SubsidiaryCategory>) => {
     setSubsidiaryCategories((prev) => prev.map((item) => (item.id === id ? { ...item, ...cat } : item)));
+    updateSubsidiaryCategoryApi(id, cat).catch(() => {});
   };
+
   const deleteSubsidiaryCategory = (id: string) => {
     setSubsidiaryCategories((prev) => prev.filter((item) => item.id !== id));
+    deleteSubsidiaryCategoryApi(id).catch(() => {});
   };
 
-  const addSubsidiary = (sub: SubsidiaryCompany) => setSubsidiaries((prev) => [sub, ...prev]);
+  const addSubsidiary = (sub: SubsidiaryCompany) => {
+    setSubsidiaries((prev) => [sub, ...prev]);
+    createSubsidiaryApi(sub).catch(() => {});
+  };
+
   const updateSubsidiary = (id: string, sub: Partial<SubsidiaryCompany>) => {
     setSubsidiaries((prev) => prev.map((item) => (item.id === id ? { ...item, ...sub } : item)));
+    updateSubsidiaryApi(id, sub).catch(() => {});
   };
-  const deleteSubsidiary = (id: string) => setSubsidiaries((prev) => prev.filter((item) => item.id !== id));
 
-  const addWhyUsFeature = (feature: WhyUsFeature) => setWhyUsFeatures((prev) => [...prev, feature]);
+  const deleteSubsidiary = (id: string) => {
+    setSubsidiaries((prev) => prev.filter((item) => item.id !== id));
+    deleteSubsidiaryApi(id).catch(() => {});
+  };
+
+  const addWhyUsFeature = (feature: WhyUsFeature) => {
+    setWhyUsFeatures((prev) => [...prev, feature]);
+    createWhyUsFeatureApi(feature).catch(() => {});
+  };
+
   const updateWhyUsFeature = (id: string, feature: Partial<WhyUsFeature>) => {
     setWhyUsFeatures((prev) => prev.map((item) => (item.id === id ? { ...item, ...feature } : item)));
+    updateWhyUsFeatureApi(id, feature).catch(() => {});
   };
-  const deleteWhyUsFeature = (id: string) => setWhyUsFeatures((prev) => prev.filter((item) => item.id !== id));
 
-  const addService = (s: ServiceItem) => setServices((prev) => [s, ...prev]);
+  const deleteWhyUsFeature = (id: string) => {
+    setWhyUsFeatures((prev) => prev.filter((item) => item.id !== id));
+    deleteWhyUsFeatureApi(id).catch(() => {});
+  };
+
+  const addService = (s: ServiceItem) => {
+    setServices((prev) => [s, ...prev]);
+    createServiceApi(s).catch(() => {});
+  };
+
   const updateService = (id: string, s: Partial<ServiceItem>) => {
     setServices((prev) => prev.map((item) => (item.id === id ? { ...item, ...s } : item)));
+    updateServiceApi(id, s).catch(() => {});
   };
-  const deleteService = (id: string) => setServices((prev) => prev.filter((item) => item.id !== id));
 
-  const addProject = (p: ProjectItem) => setProjects((prev) => [p, ...prev]);
+  const deleteService = (id: string) => {
+    setServices((prev) => prev.filter((item) => item.id !== id));
+    deleteServiceApi(id).catch(() => {});
+  };
+
+  const addProject = (p: ProjectItem) => {
+    setProjects((prev) => [p, ...prev]);
+    createProjectApi(p).catch(() => {});
+  };
+
   const updateProject = (id: string, p: Partial<ProjectItem>) => {
     setProjects((prev) => prev.map((item) => (item.id === id ? { ...item, ...p } : item)));
+    updateProjectApi(id, p).catch(() => {});
   };
-  const deleteProject = (id: string) => setProjects((prev) => prev.filter((item) => item.id !== id));
 
-  const addTeamMember = (m: TeamMember) => setTeam((prev) => [m, ...prev]);
+  const deleteProject = (id: string) => {
+    setProjects((prev) => prev.filter((item) => item.id !== id));
+    deleteProjectApi(id).catch(() => {});
+  };
+
+  const addTeamMember = (m: TeamMember) => {
+    setTeam((prev) => [m, ...prev]);
+    createTeamMemberApi(m).catch(() => {});
+  };
+
   const updateTeamMember = (id: string, m: Partial<TeamMember>) => {
     setTeam((prev) => prev.map((item) => (item.id === id ? { ...item, ...m } : item)));
+    updateTeamMemberApi(id, m).catch(() => {});
   };
-  const deleteTeamMember = (id: string) => setTeam((prev) => prev.filter((item) => item.id !== id));
+
+  const deleteTeamMember = (id: string) => {
+    setTeam((prev) => prev.filter((item) => item.id !== id));
+    deleteTeamMemberApi(id).catch(() => {});
+  };
 
   const addQuote = (quoteData: Omit<QuoteRequest, 'id' | 'status' | 'createdAt'>): QuoteRequest => {
     const newQuote: QuoteRequest = {
@@ -410,14 +589,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
     };
     setQuotes((prev) => [newQuote, ...prev]);
+    submitQuoteApi(quoteData).catch(() => {});
     return newQuote;
   };
 
   const updateQuoteStatus = (id: string, status: QuoteRequest['status']) => {
     setQuotes((prev) => prev.map((q) => (q.id === id ? { ...q, status } : q)));
+    updateQuoteStatusApi(id, status).catch(() => {});
   };
 
-  const deleteQuote = (id: string) => setQuotes((prev) => prev.filter((q) => q.id !== id));
+  const deleteQuote = (id: string) => {
+    setQuotes((prev) => prev.filter((q) => q.id !== id));
+    deleteQuoteApi(id).catch(() => {});
+  };
 
   const addInquiry = (inquiryData: Omit<ContactInquiry, 'id' | 'status' | 'createdAt'>) => {
     const newInquiry: ContactInquiry = {
@@ -427,20 +611,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
     };
     setInquiries((prev) => [newInquiry, ...prev]);
+    submitInquiryApi(inquiryData).catch(() => {});
   };
 
   const updateInquiryStatus = (id: string, status: ContactInquiry['status']) => {
     setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
+    updateInquiryStatusApi(id, status).catch(() => {});
   };
 
-  const deleteInquiry = (id: string) => setInquiries((prev) => prev.filter((i) => i.id !== id));
+  const deleteInquiry = (id: string) => {
+    setInquiries((prev) => prev.filter((i) => i.id !== id));
+    deleteInquiryApi(id).catch(() => {});
+  };
 
   // Careers & Job Positions methods
-  const addJobPosition = (job: JobPosition) => setJobPositions((prev) => [job, ...prev]);
+  const addJobPosition = (job: JobPosition) => {
+    setJobPositions((prev) => [job, ...prev]);
+    createJobPositionApi(job).catch(() => {});
+  };
+
   const updateJobPosition = (id: string, job: Partial<JobPosition>) => {
     setJobPositions((prev) => prev.map((j) => (j.id === id ? { ...j, ...job } : j)));
+    updateJobPositionApi(id, job).catch(() => {});
   };
-  const deleteJobPosition = (id: string) => setJobPositions((prev) => prev.filter((j) => j.id !== id));
+
+  const deleteJobPosition = (id: string) => {
+    setJobPositions((prev) => prev.filter((j) => j.id !== id));
+    deleteJobPositionApi(id).catch(() => {});
+  };
 
   const addJobApplication = (appData: Omit<JobApplication, 'id' | 'status' | 'appliedAt'>): JobApplication => {
     const newApp: JobApplication = {
@@ -450,24 +648,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       appliedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
     };
     setJobApplications((prev) => [newApp, ...prev]);
+    submitJobApplicationApi(appData).catch(() => {});
     return newApp;
   };
 
   const updateJobApplicationStatus = (id: string, status: JobApplication['status']) => {
     setJobApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
+    updateJobAppStatusApi(id, status).catch(() => {});
   };
 
-  const deleteJobApplication = (id: string) => setJobApplications((prev) => prev.filter((a) => a.id !== id));
+  const deleteJobApplication = (id: string) => {
+    setJobApplications((prev) => prev.filter((a) => a.id !== id));
+    deleteJobAppApi(id).catch(() => {});
+  };
 
-  const addClientLogo = (logo: ClientLogo) => setClientLogos((prev) => [logo, ...prev]);
-  const updateClientLogo = (id: string, logo: Partial<ClientLogo>) =>
+  const addClientLogo = (logo: ClientLogo) => {
+    setClientLogos((prev) => [logo, ...prev]);
+    createClientLogoApi(logo).catch(() => {});
+  };
+
+  const updateClientLogo = (id: string, logo: Partial<ClientLogo>) => {
     setClientLogos((prev) => prev.map((item) => (item.id === id ? { ...item, ...logo } : item)));
-  const deleteClientLogo = (id: string) => setClientLogos((prev) => prev.filter((item) => item.id !== id));
+    updateClientLogoApi(id, logo).catch(() => {});
+  };
 
-  const addTestimonial = (t: Testimonial) => setTestimonials((prev) => [t, ...prev]);
-  const updateTestimonial = (id: string, t: Partial<Testimonial>) =>
+  const deleteClientLogo = (id: string) => {
+    setClientLogos((prev) => prev.filter((item) => item.id !== id));
+    deleteClientLogoApi(id).catch(() => {});
+  };
+
+  const addTestimonial = (t: Testimonial) => {
+    setTestimonials((prev) => [t, ...prev]);
+    createTestimonialApi(t).catch(() => {});
+  };
+
+  const updateTestimonial = (id: string, t: Partial<Testimonial>) => {
     setTestimonials((prev) => prev.map((item) => (item.id === id ? { ...item, ...t } : item)));
-  const deleteTestimonial = (id: string) => setTestimonials((prev) => prev.filter((item) => item.id !== id));
+    updateTestimonialApi(id, t).catch(() => {});
+  };
+
+  const deleteTestimonial = (id: string) => {
+    setTestimonials((prev) => prev.filter((item) => item.id !== id));
+    deleteTestimonialApi(id).catch(() => {});
+  };
 
   const openQuoteWithCategory = (cat: 'security' | 'cleaning' | 'integrated') => {
     setPreselectedQuoteCategory(cat);

@@ -8,6 +8,7 @@ export const AdminLogin: React.FC = () => {
   const { lang, loginAdmin } = useApp();
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigateToHome = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -15,17 +16,23 @@ export const AdminLogin: React.FC = () => {
     window.dispatchEvent(new Event('popstate'));
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = loginAdmin(password);
+    setError(false);
+    setLoading(true);
+    const success = await loginAdmin(password);
+    setLoading(false);
     if (!success) {
       setError(true);
     }
   };
 
-  const handleQuickDemoFill = () => {
+  const handleQuickDemoFill = async () => {
     setPassword('admin123');
-    loginAdmin('admin123');
+    setError(false);
+    setLoading(true);
+    await loginAdmin('admin123');
+    setLoading(false);
   };
 
   return (
@@ -81,10 +88,20 @@ export const AdminLogin: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 transition-all shadow-lg shadow-[#C9A961]/20"
+            disabled={loading}
+            className="w-full py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 transition-all shadow-lg shadow-[#C9A961]/20 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <span>{lang === 'ar' ? 'دخول اللوحة' : 'Authorize & Enter'}</span>
-            {lang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-[#0B1929] border-t-transparent rounded-full animate-spin" />
+                <span>{lang === 'ar' ? 'جارٍ التحقق...' : 'Verifying...'}</span>
+              </span>
+            ) : (
+              <>
+                <span>{lang === 'ar' ? 'دخول اللوحة' : 'Authorize & Enter'}</span>
+                {lang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </>
+            )}
           </button>
         </form>
 
