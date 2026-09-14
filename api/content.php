@@ -108,7 +108,7 @@ try {
         'twitterUrl'          => $rawSettings['twitter_url'] ?? '',
         'linkedinUrl'         => $rawSettings['linkedin_url'] ?? '',
         'instagramUrl'        => $rawSettings['instagram_url'] ?? '',
-        'whatsappNumber'      => $rawSettings['whatsapp_number'] ?? '966501234567',
+        'whatsappNumber'      => $rawSettings['whatsapp_number'] ?? '966555555555',
     ];
 
     // 2. Services

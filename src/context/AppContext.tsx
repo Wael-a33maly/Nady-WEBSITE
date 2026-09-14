@@ -87,7 +87,7 @@ interface AppContextType {
   setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
   isAdmin: boolean;
-  loginAdmin: (pass: string) => Promise<boolean>;
+  loginAdmin: (pass: string) => Promise<{ success: boolean; error?: string }>;
   logoutAdmin: () => void;
   
   settings: SiteSettings;
@@ -447,28 +447,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setTheme = (t: ThemeMode) => setThemeState(t);
   const toggleTheme = () => setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
-  const loginAdmin = async (pass: string): Promise<boolean> => {
+  const loginAdmin = async (pass: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const res = await loginAdminApi(pass);
-      if (res && res.success) {
-        setIsAdmin(true);
-        return true;
+      if (res && res.success && res.token) {
+        const isValid = await verifyAdminSessionApi();
+        if (isValid) {
+          setIsAdmin(true);
+          localStorage.setItem('hn_admin_auth', 'true');
+          return { success: true };
+        }
+        return { success: false, error: 'verification_failed' };
       }
+      if (res && !res.success) {
+        return { success: false, error: res.error || 'invalid_credentials' };
+      }
+      return { success: false, error: 'connection_failed' };
     } catch {
-      // Fallback
+      return { success: false, error: 'connection_failed' };
     }
-    if (pass === 'admin' || pass === 'admin123' || pass === '123456') {
-      setIsAdmin(true);
-      localStorage.setItem('hn_admin_auth', 'true');
-      return true;
-    }
-    return false;
   };
 
   const logoutAdmin = () => {
     logoutAdminApi().catch(() => {});
     setIsAdmin(false);
     localStorage.removeItem('hn_admin_auth');
+    localStorage.removeItem('hn_admin_token');
   };
 
   const updateSettings = (newS: Partial<SiteSettings>) => {

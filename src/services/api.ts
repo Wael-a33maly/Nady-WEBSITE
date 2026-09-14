@@ -105,18 +105,25 @@ export async function loginAdminApi(password: string, username: string = 'admin'
   });
   if (res && res.success && res.token) {
     localStorage.setItem('hn_admin_token', res.token);
-    localStorage.setItem('hn_admin_auth', 'true');
   }
   return res;
 }
 
 export async function verifyAdminSessionApi(): Promise<boolean> {
   const token = getAuthToken();
-  if (!token) return false;
+  if (!token) {
+    localStorage.removeItem('hn_admin_auth');
+    return false;
+  }
   const res = await request<{ success: boolean; valid: boolean }>('/auth.php?action=check', {
     method: 'POST',
   });
-  return !!res?.success && !!res?.valid;
+  const isValid = !!res?.success && !!res?.valid;
+  if (!isValid) {
+    localStorage.removeItem('hn_admin_token');
+    localStorage.removeItem('hn_admin_auth');
+  }
+  return isValid;
 }
 
 export async function logoutAdminApi(): Promise<void> {

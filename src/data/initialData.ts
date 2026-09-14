@@ -154,7 +154,7 @@ export const initialSiteSettings: SiteSettings = {
   twitterUrl: 'https://x.com',
   linkedinUrl: 'https://linkedin.com',
   instagramUrl: 'https://instagram.com',
-  whatsappNumber: '966501234567',
+  whatsappNumber: '966555555555',
 };
 
 export const initialSubsidiaryCategories: { id: string; nameAr: string; nameEn: string }[] = [

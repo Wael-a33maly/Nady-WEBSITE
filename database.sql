@@ -22,7 +22,7 @@ CREATE TABLE `admin_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `admin_users` (`id`, `username`, `password_hash`, `email`, `created_at`)
-VALUES (1, 'admin', 'admin123', 'admin@hares-niqaa.com', NOW());
+VALUES (1, 'admin', '$2y$10$TxfadOlQAi1yO8sEYpexSehpg6nWXTYYbArXhPiwxmdkuhD2OINe.', 'admin@hares-niqaa.com', NOW());
 
 -- ------------------------------------------------------------------------------
 -- 2. Admin Sessions & Auth Tokens Table
@@ -109,7 +109,7 @@ CREATE TABLE `settings` (
   `twitter_url` VARCHAR(255) DEFAULT NULL,
   `linkedin_url` VARCHAR(255) DEFAULT NULL,
   `instagram_url` VARCHAR(255) DEFAULT NULL,
-  `whatsapp_number` VARCHAR(50) DEFAULT '966501234567',
+  `whatsapp_number` VARCHAR(50) DEFAULT '966555555555',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -198,7 +198,7 @@ INSERT INTO `settings` (
   'https://x.com',
   'https://linkedin.com',
   'https://instagram.com',
-  '966501234567'
+  '966555555555'
 );
 
 -- ------------------------------------------------------------------------------

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { BrandLogo } from '../ui/BrandLogo';
-import { Lock, KeyRound, ShieldAlert, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, KeyRound, ShieldAlert, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const AdminLogin: React.FC = () => {
   const { lang, loginAdmin } = useApp();
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const navigateToHome = (e: React.MouseEvent) => {
@@ -18,21 +18,25 @@ export const AdminLogin: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(false);
+    setErrorMessage(null);
     setLoading(true);
-    const success = await loginAdmin(password);
+    const result = await loginAdmin(password);
     setLoading(false);
-    if (!success) {
-      setError(true);
+    if (!result.success) {
+      if (result.error === 'connection_failed') {
+        setErrorMessage(
+          lang === 'ar'
+            ? 'تعذر الاتصال بالخادم. يرجى التأكد من تشغيل الخادم والاتصال بالإنترنت.'
+            : 'Could not connect to the server. Please verify your connection.'
+        );
+      } else {
+        setErrorMessage(
+          lang === 'ar'
+            ? 'كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.'
+            : 'Invalid credentials. Please try again.'
+        );
+      }
     }
-  };
-
-  const handleQuickDemoFill = async () => {
-    setPassword('admin123');
-    setError(false);
-    setLoading(true);
-    await loginAdmin('admin123');
-    setLoading(false);
   };
 
   return (
@@ -60,10 +64,10 @@ export const AdminLogin: React.FC = () => {
           </p>
         </div>
 
-        {error && (
+        {errorMessage && (
           <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400" />
-            <span>{lang === 'ar' ? 'كلمة المرور غير صحيحة (جرب admin123)' : 'Invalid passcode (Try admin123)'}</span>
+            <span>{errorMessage}</span>
           </div>
         )}
 
@@ -79,7 +83,7 @@ export const AdminLogin: React.FC = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setError(false);
+                setErrorMessage(null);
               }}
               placeholder="••••••••"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-slate-100 focus:border-[#C9A961] focus:outline-none"
@@ -105,18 +109,7 @@ export const AdminLogin: React.FC = () => {
           </button>
         </form>
 
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-center space-y-3">
-          <p className="text-[11px] text-slate-500 dark:text-slate-400">
-            {lang === 'ar' ? 'للتجربة السريعة اضغط الزر أدناه:' : 'For quick evaluation, click below:'}
-          </p>
-          <button
-            onClick={handleQuickDemoFill}
-            className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-[#C9A961] text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-[#C9A961] transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <span>{lang === 'ar' ? 'دخول مباشر كمسؤول (Demo)' : 'Instant Admin Login (Demo)'}</span>
-          </button>
-
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
           <a
             href="/"
             onClick={navigateToHome}

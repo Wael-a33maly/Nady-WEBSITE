@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 export const WhatsAppFloatingButton: React.FC = () => {
   const { lang, settings } = useApp();
 
-  const rawNumber = settings.whatsappNumber || settings.phone || '966501234567';
+  const rawNumber = settings.whatsappNumber || settings.phone || '966555555555';
   const cleanNumber = rawNumber.replace(/[^0-9]/g, '');
 
   const defaultMsg =

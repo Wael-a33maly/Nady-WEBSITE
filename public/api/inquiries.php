@@ -1,7 +1,7 @@
 <?php
 /**
  * Inquiries / Contact Messages Endpoint
- * POST   /api/inquiries.php (Public submission)
+ * POST   /api/inquiries.php (Public submission with strict validation & rate limiting)
  * GET    /api/inquiries.php (Admin only: fetch all)
  * PUT    /api/inquiries.php?id=... (Admin only: update status)
  * DELETE /api/inquiries.php?id=... (Admin only: delete)
@@ -19,18 +19,35 @@ $pdo = getDbConnection();
 
 // PUBLIC: Submit Contact Message
 if ($method === 'POST') {
-    checkRateLimit('submit_inquiry', 8, 3600);
+    // Strict rate limit: 5 submissions per 10 minutes (600 seconds)
+    checkRateLimit('submit_inquiry', 5, 600);
 
     $input = getJsonInput();
 
-    $name = trim($input['name'] ?? '');
-    $phone = trim($input['phone'] ?? '');
-    $email = trim($input['email'] ?? '');
-    $subject = trim($input['subject'] ?? 'استفسار عام');
-    $message = trim($input['message'] ?? '');
+    $name    = mb_substr(trim($input['name'] ?? ''), 0, 100);
+    $phone   = mb_substr(trim($input['phone'] ?? ''), 0, 30);
+    $email   = mb_substr(trim($input['email'] ?? ''), 0, 100);
+    $subject = mb_substr(trim($input['subject'] ?? 'استفسار عام'), 0, 150);
+    $message = mb_substr(trim($input['message'] ?? ''), 0, 2000);
 
     if (empty($name) || empty($phone) || empty($message)) {
         sendError('يرجى كتابة الاسم، ورقم الهاتف، والرسالة.', 400);
+    }
+
+    if (mb_strlen($name) < 2) {
+        sendError('الاسم يجب أن يحتوي على حرفين على الأقل.', 400);
+    }
+
+    if (!preg_match('/^[+0-9\s\-()]{7,30}$/', $phone)) {
+        sendError('يرجى إدخال رقم هاتف صحيح.', 400);
+    }
+
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendError('يرجى إدخال بريد إلكتروني صحيح.', 400);
+    }
+
+    if (mb_strlen($message) < 5) {
+        sendError('نص الرسالة قصير جداً.', 400);
     }
 
     $id = 'inq-' . time() . '-' . rand(100, 999);

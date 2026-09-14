@@ -10,11 +10,34 @@ require_once __DIR__ . '/config.php';
 
 // Set global JSON header and handle CORS
 function applyCorsHeaders(): void {
-    $origin = defined('ALLOWED_ORIGIN') ? ALLOWED_ORIGIN : '*';
-    header("Access-Control-Allow-Origin: {$origin}");
+    $configuredOrigin = defined('ALLOWED_ORIGIN') ? trim((string)ALLOWED_ORIGIN) : '';
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+    if (!empty($configuredOrigin)) {
+        header("Access-Control-Allow-Origin: {$configuredOrigin}");
+    } elseif (!empty($origin)) {
+        $parsed = parse_url($origin);
+        $host = $parsed['host'] ?? '';
+        $port = $parsed['port'] ?? null;
+        $serverHost = $_SERVER['HTTP_HOST'] ?? '';
+        $serverHostname = explode(':', $serverHost)[0];
+
+        $isLocal = in_array($host, ['localhost', '127.0.0.1'], true) && ($port === null || in_array((int)$port, [3000, 5173, 80, 443], true));
+        $isSameHost = !empty($serverHostname) && ($host === $serverHostname || str_ends_with($host, '.' . $serverHostname));
+
+        if ($isLocal || $isSameHost) {
+            header("Access-Control-Allow-Origin: {$origin}");
+        } else {
+            header('Access-Control-Allow-Origin: null');
+        }
+    } else {
+        header('Access-Control-Allow-Origin: *');
+    }
+
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-Admin-Token');
     header('Access-Control-Max-Age: 86400');
+    header('X-Content-Type-Options: nosniff');
     header('Content-Type: application/json; charset=UTF-8');
 
     // Handle preflight OPTIONS request
@@ -28,6 +51,7 @@ function applyCorsHeaders(): void {
 function sendJson(mixed $data, int $statusCode = 200): void {
     http_response_code($statusCode);
     header('Content-Type: application/json; charset=UTF-8');
+    header('X-Content-Type-Options: nosniff');
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
@@ -36,6 +60,7 @@ function sendJson(mixed $data, int $statusCode = 200): void {
 function sendError(string $message, int $statusCode = 400, mixed $details = null): void {
     http_response_code($statusCode);
     header('Content-Type: application/json; charset=UTF-8');
+    header('X-Content-Type-Options: nosniff');
     $payload = ['success' => false, 'error' => $message];
     if ($details !== null) {
         $payload['details'] = $details;
@@ -127,12 +152,11 @@ function checkRateLimit(string $action, int $maxRequests = 15, int $windowSecond
     }
 
     if ($now - ($data['first_request'] ?? 0) > $windowSeconds) {
-        // Reset window
         $data = ['count' => 1, 'first_request' => $now];
     } else {
         $data['count'] = ($data['count'] ?? 0) + 1;
         if ($data['count'] > $maxRequests) {
-            sendError('لقد تجاوزت الحد المسموح من الطلبات. يرجى المحاولة لاحقاً بعد ساعة.', 429);
+            sendError('لقد تجاوزت الحد المسموح من الطلبات. يرجى المحاولة لاحقاً بعد قليل.', 429);
         }
     }
 

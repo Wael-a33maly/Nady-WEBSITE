@@ -100,7 +100,7 @@ export const SettingsManager: React.FC = () => {
   const [twitterUrl, setTwitterUrl] = useState(settings.twitterUrl);
   const [linkedinUrl, setLinkedinUrl] = useState(settings.linkedinUrl);
   const [instagramUrl, setInstagramUrl] = useState(settings.instagramUrl);
-  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '966501234567');
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '966555555555');
   
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [previewMode, setPreviewMode] = useState<'dark' | 'light'>('dark');
@@ -965,14 +965,14 @@ export const SettingsManager: React.FC = () => {
                 type="text"
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
-                placeholder="e.g. 966501234567"
+                placeholder="e.g. 966555555555"
                 className="w-full bg-white dark:bg-slate-900 border border-[#25D366]/50 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-200 font-bold focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                 dir="ltr"
               />
               <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                 {lang === 'ar'
-                  ? 'أدخل الرقم مع مفتاح الدولة بدون علامة + (مثال: 966501234567). سيقوم الزر العائم بإرسال الرسائل الفورية لهذا الرقم مباشرة.'
-                  : 'Include country code without + sign (e.g. 966501234567). The floating button will direct chats to this number.'}
+                  ? 'أدخل الرقم مع مفتاح الدولة بدون علامة + (مثال: 966555555555). سيقوم الزر العائم بإرسال الرسائل الفورية لهذا الرقم مباشرة.'
+                  : 'Include country code without + sign (e.g. 966555555555). The floating button will direct chats to this number.'}
               </p>
             </div>
           </div>

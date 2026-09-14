@@ -7,7 +7,7 @@
 Options -Indexes
 
 # Prevent access to hidden files and sensitive extensions
-<FilesMatch "^\.env|\.(sql|bak|log|git|md)$">
+<FilesMatch "^\.env|\.(sql|bak|log|git|md|ts|tsx|map)$|^metadata\.json$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -43,14 +43,21 @@ AddDefaultCharset UTF-8
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
     Header set X-XSS-Protection "1; mode=block"
-    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Frame-Options "DENY"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
 </IfModule>
 
 # URL Rewriting for React Router SPA & PHP API
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    # Block direct access to scripts folder and specific sensitive documentation files
+    RewriteRule ^scripts/.*$ - [F,L]
+    RewriteRule ^generate_sql\.ts$ - [F,L]
+    RewriteRule ^PLAN\.md$ - [F,L]
+    RewriteRule ^metadata\.json$ - [F,L]
 
     # 1. Do NOT rewrite requests targeting the /api/ directory
     RewriteCond %{REQUEST_URI} ^/api/ [NC]
