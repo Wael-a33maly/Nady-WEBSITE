@@ -22,7 +22,7 @@ CREATE TABLE `admin_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `admin_users` (`id`, `username`, `password_hash`, `email`, `created_at`)
-VALUES (1, 'admin', '$2y$10$TxfadOlQAi1yO8sEYpexSehpg6nWXTYYbArXhPiwxmdkuhD2OINe.', 'admin@hares-niqaa.com', NOW());
+VALUES (1, 'admin', '$2y$10$HnhGRYVM7uYlIYNNXwNvkOg/.YwY1WLY.NPmO5PX0IXSXWb0sQVBS', 'admin@hares-niqaa.com', NOW());
 
 -- ------------------------------------------------------------------------------
 -- 2. Admin Sessions & Auth Tokens Table
