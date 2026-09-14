@@ -163,6 +163,26 @@ export async function logoutAdminApi(): Promise<void> {
   }
 }
 
+export interface ChangePasswordResponse {
+  success: boolean;
+  error?: string;
+  message?: string;
+}
+
+export async function changeAdminPasswordApi(
+  currentPassword: string,
+  newPassword: string
+): Promise<ChangePasswordResponse> {
+  const res = await request<ChangePasswordResponse>('/auth.php?action=change_password', {
+    method: 'POST',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+  if (res === null) {
+    return { success: false, error: 'connection_failed' };
+  }
+  return res;
+}
+
 // ------------------------------------------------------------------------------
 // 3. Settings
 // ------------------------------------------------------------------------------

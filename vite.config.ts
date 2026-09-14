@@ -4,6 +4,7 @@ import path from 'path';
 import { defineConfig, type Plugin } from 'vite';
 
 function apiDevPlugin(): Plugin {
+  let devAdminPassword = 'admin123';
   return {
     name: 'api-dev-plugin',
     configureServer(server) {
@@ -35,7 +36,7 @@ function apiDevPlugin(): Plugin {
           if (pathname === '/api/auth.php') {
             if (action === 'login') {
               const pass = String(parsed.password || '').trim();
-              if (pass === 'admin123' || pass === 'admin') {
+              if (pass === devAdminPassword || pass === 'admin') {
                 res.statusCode = 200;
                 res.end(
                   JSON.stringify({
@@ -70,8 +71,39 @@ function apiDevPlugin(): Plugin {
             }
 
             if (action === 'change_password') {
+              const currentPassword = String(parsed.currentPassword || '').trim();
+              const newPassword = String(parsed.newPassword || '').trim();
+
+              if (currentPassword !== devAdminPassword && currentPassword !== 'admin') {
+                res.statusCode = 400;
+                res.end(
+                  JSON.stringify({
+                    success: false,
+                    error: 'كلمة المرور الحالية غير صحيحة.',
+                  })
+                );
+                return;
+              }
+
+              if (newPassword.length < 6) {
+                res.statusCode = 400;
+                res.end(
+                  JSON.stringify({
+                    success: false,
+                    error: 'يجب أن تكون كلمة المرور الجديدة مكونة من 6 أحرف على الأقل.',
+                  })
+                );
+                return;
+              }
+
+              devAdminPassword = newPassword;
               res.statusCode = 200;
-              res.end(JSON.stringify({ success: true, message: 'تم تحديث كلمة المرور بنجاح.' }));
+              res.end(
+                JSON.stringify({
+                  success: true,
+                  message: 'تم تغيير كلمة المرور بنجاح.',
+                })
+              );
               return;
             }
           }

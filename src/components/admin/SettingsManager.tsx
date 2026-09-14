@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { ColorPreset } from '../../types';
+import { changeAdminPasswordApi } from '../../services/api';
 import {
   Save,
   CheckCircle2,
@@ -15,10 +16,14 @@ import {
   Type,
   Layers,
   Eye,
+  EyeOff,
   RotateCcw,
   Box,
   ShieldCheck,
   ExternalLink,
+  Lock,
+  KeyRound,
+  AlertCircle,
 } from 'lucide-react';
 
 export const SettingsManager: React.FC = () => {
@@ -230,6 +235,130 @@ export const SettingsManager: React.FC = () => {
     });
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
+  };
+
+  // Password change state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStatus, setPasswordStatus] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordStatus(null);
+
+    const curr = currentPassword.trim();
+    const next = newPassword.trim();
+    const conf = confirmPassword.trim();
+
+    // 1. All fields filled
+    if (!curr || !next || !conf) {
+      setPasswordStatus({
+        type: 'error',
+        message:
+          lang === 'ar'
+            ? 'يرجى ملء جميع حقول كلمة المرور.'
+            : 'Please fill in all password fields.',
+      });
+      return;
+    }
+
+    // 2. New password length >= 8 and contains letters & numbers
+    const hasLetter = /[a-zA-Z]/.test(next);
+    const hasNumber = /\d/.test(next);
+    if (next.length < 8 || !hasLetter || !hasNumber) {
+      setPasswordStatus({
+        type: 'error',
+        message:
+          lang === 'ar'
+            ? 'يجب أن تتكون كلمة المرور الجديدة من 8 خانات على الأقل وتحتوي على حروف وأرقام.'
+            : 'New password must be at least 8 characters long and contain both letters and numbers.',
+      });
+      return;
+    }
+
+    // 3. New matches confirm
+    if (next !== conf) {
+      setPasswordStatus({
+        type: 'error',
+        message:
+          lang === 'ar'
+            ? 'كلمة المرور الجديدة وتأكيدها غير متطابقين.'
+            : 'New password and confirmation do not match.',
+      });
+      return;
+    }
+
+    // 4. New does not match current
+    if (next === curr) {
+      setPasswordStatus({
+        type: 'error',
+        message:
+          lang === 'ar'
+            ? 'كلمة المرور الجديدة يجب أن تكون مختلفة عن كلمة المرور الحالية.'
+            : 'New password must be different from current password.',
+      });
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      const res = await changeAdminPasswordApi(curr, next);
+      if (res && res.success) {
+        setPasswordStatus({
+          type: 'success',
+          message:
+            lang === 'ar'
+              ? 'تم تغيير كلمة المرور بنجاح.'
+              : 'Password changed successfully.',
+        });
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        if (!res || res.error === 'connection_failed') {
+          setPasswordStatus({
+            type: 'error',
+            message:
+              lang === 'ar'
+                ? 'تعذر الاتصال بالخادم.'
+                : 'Could not connect to the server.',
+          });
+        } else if (res.error && res.error.includes('الحالية')) {
+          setPasswordStatus({
+            type: 'error',
+            message:
+              lang === 'ar'
+                ? 'كلمة المرور الحالية غير صحيحة.'
+                : 'Current password is incorrect.',
+          });
+        } else {
+          setPasswordStatus({
+            type: 'error',
+            message:
+              res.error ||
+              (lang === 'ar' ? 'فشل تغيير كلمة المرور.' : 'Failed to change password.'),
+          });
+        }
+      }
+    } catch {
+      setPasswordStatus({
+        type: 'error',
+        message:
+          lang === 'ar'
+            ? 'تعذر الاتصال بالخادم.'
+            : 'Could not connect to the server.',
+      });
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   return (
@@ -988,6 +1117,143 @@ export const SettingsManager: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {/* SECTION: Security / Change Password */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#112236] border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <Lock className="w-5 h-5 text-[#C9A961]" />
+          <span>{lang === 'ar' ? 'الأمان / تغيير كلمة المرور' : 'Security / Change Password'}</span>
+        </h3>
+
+        <AnimatePresence mode="wait">
+          {passwordStatus && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className={`p-4 rounded-xl flex items-center gap-3 text-xs font-semibold ${
+                passwordStatus.type === 'success'
+                  ? 'bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300'
+                  : 'bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-800 dark:text-rose-300'
+              }`}
+            >
+              {passwordStatus.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
+              )}
+              <span>{passwordStatus.message}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <form onSubmit={handlePasswordChange} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+            {/* Field 1: Current Password */}
+            <div>
+              <label className="block mb-1 font-semibold text-slate-700 dark:text-slate-300">
+                {lang === 'ar' ? 'كلمة المرور الحالية' : 'Current Password'}
+              </label>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 pe-10 text-slate-900 dark:text-slate-200 focus:border-[#C9A961] focus:outline-none"
+                  dir="ltr"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword((prev) => !prev)}
+                  className="absolute inset-y-0 end-0 pe-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Field 2: New Password */}
+            <div>
+              <label className="block mb-1 font-semibold text-slate-700 dark:text-slate-300">
+                {lang === 'ar' ? 'كلمة المرور الجديدة' : 'New Password'}
+              </label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 pe-10 text-slate-900 dark:text-slate-200 focus:border-[#C9A961] focus:outline-none"
+                  dir="ltr"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword((prev) => !prev)}
+                  className="absolute inset-y-0 end-0 pe-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                {lang === 'ar' ? '8 خانات على الأقل تحتوي حروفاً وأرقاماً' : 'At least 8 chars with letters & numbers'}
+              </p>
+            </div>
+
+            {/* Field 3: Confirm New Password */}
+            <div>
+              <label className="block mb-1 font-semibold text-slate-700 dark:text-slate-300">
+                {lang === 'ar' ? 'تأكيد كلمة المرور الجديدة' : 'Confirm New Password'}
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 pe-10 text-slate-900 dark:text-slate-200 focus:border-[#C9A961] focus:outline-none"
+                  dir="ltr"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute inset-y-0 end-0 pe-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+              {lang === 'ar'
+                ? 'ملاحظة: بعد تغيير كلمة المرور ستبقى جلستك الحالية نشطة، لكن إن كنت مسجلًا على جهاز آخر فستحتاج لتسجيل الدخول مجددًا.'
+                : 'Note: After changing your password, your current session will remain active, but other logged-in devices will need to sign in again.'}
+            </p>
+
+            <button
+              type="submit"
+              disabled={isChangingPassword}
+              className="px-6 py-2.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>
+                {isChangingPassword
+                  ? lang === 'ar'
+                    ? 'جاري التحديث...'
+                    : 'Updating...'
+                  : lang === 'ar'
+                  ? 'تحديث كلمة المرور'
+                  : 'Update Password'}
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
