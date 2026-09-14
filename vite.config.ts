@@ -109,8 +109,14 @@ function apiDevPlugin(): Plugin {
   };
 }
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const isProd = mode === 'production' || process.env.NODE_ENV === 'production';
   return {
+    define: isProd
+      ? {
+          'import.meta.env.DEV': 'false',
+        }
+      : {},
     plugins: [react(), tailwindcss(), apiDevPlugin()],
     resolve: {
       alias: {

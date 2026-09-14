@@ -27,6 +27,16 @@ export const Navbar: React.FC = () => {
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { href: '#home', labelAr: 'الرئيسية', labelEn: 'Home' },
@@ -42,21 +52,23 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Top Scroll Shield / Gradient Mask to prevent content bleeding above or under header */}
+      {/* Top Scroll Shield: Smooth ambient backdrop only when scrolled, no harsh white glow over hero */}
       <div
-        className={`fixed top-0 inset-x-0 h-24 sm:h-28 z-30 pointer-events-none transition-colors duration-300 ${
-          theme === 'dark'
-            ? 'bg-gradient-to-b from-[#0B1929] via-[#0B1929]/95 to-transparent'
-            : 'bg-gradient-to-b from-[#F8FAFC] via-[#F8FAFC]/95 to-transparent'
+        className={`fixed top-0 inset-x-0 h-24 sm:h-28 z-30 pointer-events-none transition-opacity duration-500 ${
+          isScrolled
+            ? theme === 'dark'
+              ? 'opacity-100 bg-gradient-to-b from-[#0B1929] via-[#0B1929]/90 to-transparent'
+              : 'opacity-100 bg-gradient-to-b from-[#F8FAFC]/90 via-[#F8FAFC]/60 to-transparent'
+            : 'opacity-0'
         }`}
       />
 
       <header className="fixed top-3 inset-x-3 sm:inset-x-6 lg:inset-x-8 max-w-[1700px] mx-auto z-40">
         <div
-          className={`w-full rounded-2xl lg:rounded-full border backdrop-blur-2xl transition-all duration-300 px-4 sm:px-6 py-2.5 shadow-xl flex items-center justify-between gap-3 ${
+          className={`w-full rounded-2xl lg:rounded-full border backdrop-blur-2xl transition-all duration-300 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 ${
             theme === 'dark'
-              ? 'bg-[#0B1929]/98 border-slate-700/80 text-white shadow-black/50'
-              : 'bg-white/98 border-slate-200 text-slate-900 shadow-slate-300/50'
+              ? 'bg-[#0B1929]/95 border-slate-700/80 text-white shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(201,169,97,0.12)]'
+              : 'bg-white/95 border-[#C9A961]/35 text-slate-900 shadow-[0_10px_30px_-5px_rgba(11,25,41,0.08),0_0_20px_rgba(201,169,97,0.14)]'
           }`}
         >
           {/* Logo */}

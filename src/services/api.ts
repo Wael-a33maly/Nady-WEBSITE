@@ -54,10 +54,28 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
       return null;
     }
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.warn(`[API ${endpoint}] Error:`, data?.error || response.statusText);
+    let data: unknown;
+    try {
+      data = await response.json();
+    } catch {
       return null;
+    }
+
+    if (!response.ok) {
+      console.warn(`[API ${endpoint}] HTTP ${response.status}:`, (data as { error?: string })?.error || response.statusText);
+      // Return the JSON error payload so callers receive { success: false, error: ... } accurately
+      if (typeof data === 'object' && data !== null) {
+        const errorObj = data as Record<string, unknown>;
+        return {
+          success: false,
+          error: (errorObj.error as string) || (errorObj.message as string) || response.statusText,
+          ...errorObj,
+        } as T;
+      }
+      return {
+        success: false,
+        error: response.statusText,
+      } as unknown as T;
     }
 
     return data as T;
@@ -115,15 +133,18 @@ export async function verifyAdminSessionApi(): Promise<boolean> {
     localStorage.removeItem('hn_admin_auth');
     return false;
   }
-  if (token.startsWith('dev-offline-') || token.startsWith('dev-token-')) {
+  if (import.meta.env.DEV && token.startsWith('dev-token-')) {
     return true;
   }
   const res = await request<{ success: boolean; valid: boolean }>('/auth.php?action=check', {
     method: 'POST',
   });
   if (res === null) {
-    // If server is unreachable (e.g. static preview without backend), keep active session
-    return true;
+    // In dev mode without backend, maintain session; in production, require real server verification
+    if (import.meta.env.DEV) {
+      return true;
+    }
+    return false;
   }
   const isValid = !!res?.success && !!res?.valid;
   if (!isValid) {

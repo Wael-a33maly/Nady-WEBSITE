@@ -460,45 +460,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return { success: false, error: res.error || 'invalid_credentials' };
       }
 
-      // If backend is unreachable (e.g. static preview environment), verify SHA-256 hash securely
-      try {
-        const hashBuf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(trimmed));
-        const hashHex = Array.from(new Uint8Array(hashBuf))
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join('');
-
-        // 240be518... is sha256("admin123"), 8c6976e... is sha256("admin")
-        if (
-          hashHex === '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9' ||
-          hashHex === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'
-        ) {
+      // Local development preview fallback (only active when import.meta.env.DEV is true)
+      if (import.meta.env.DEV) {
+        if (trimmed === 'admin123' || trimmed === 'admin') {
           setIsAdmin(true);
           localStorage.setItem('hn_admin_auth', 'true');
-          localStorage.setItem('hn_admin_token', 'dev-offline-session');
           return { success: true };
         }
-      } catch {
-        // Crypto not available, pass through
       }
 
-      return { success: false, error: 'invalid_credentials' };
+      return { success: false, error: 'connection_failed' };
     } catch {
-      try {
-        const hashBuf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(trimmed));
-        const hashHex = Array.from(new Uint8Array(hashBuf))
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join('');
-
-        if (
-          hashHex === '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9' ||
-          hashHex === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'
-        ) {
+      if (import.meta.env.DEV) {
+        if (trimmed === 'admin123' || trimmed === 'admin') {
           setIsAdmin(true);
           localStorage.setItem('hn_admin_auth', 'true');
-          localStorage.setItem('hn_admin_token', 'dev-offline-session');
           return { success: true };
         }
-      } catch {}
+      }
       return { success: false, error: 'connection_failed' };
     }
   };
