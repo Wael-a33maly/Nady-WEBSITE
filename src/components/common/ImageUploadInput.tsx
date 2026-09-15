@@ -63,7 +63,7 @@ export const ImageUploadInput: React.FC<ImageUploadInputProps> = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
-        <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+        <label className="text-xs font-bold text-slate-900 dark:text-slate-200">
           {label}
         </label>
         <button

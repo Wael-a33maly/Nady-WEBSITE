@@ -93,6 +93,14 @@ export interface SubsidiaryCategory {
   nameEn: string;
 }
 
+export interface DetailedSubsidiaryService {
+  id: string;
+  titleAr: string;
+  titleEn: string;
+  descAr?: string;
+  descEn?: string;
+}
+
 export interface SubsidiaryCompany {
   id: string;
   nameAr: string;
@@ -109,6 +117,7 @@ export interface SubsidiaryCompany {
   detailedMissionEn?: string;
   servicesAr: string[];
   servicesEn: string[];
+  detailedServices?: DetailedSubsidiaryService[];
   certificationsAr?: string[];
   certificationsEn?: string[];
   galleryImages?: string[];
@@ -120,6 +129,55 @@ export interface SubsidiaryCompany {
   websiteUrl?: string;
   badgeAr?: string;
   badgeEn?: string;
+
+  // Fully dynamic elements for every part of the subsidiary screen
+  heroSubtitleAr?: string;
+  heroSubtitleEn?: string;
+  projectsLabelAr?: string;
+  projectsLabelEn?: string;
+  clientsLabelAr?: string;
+  clientsLabelEn?: string;
+  establishedLabelAr?: string;
+  establishedLabelEn?: string;
+  complianceRate?: string;
+  complianceLabelAr?: string;
+  complianceLabelEn?: string;
+
+  overviewTagAr?: string;
+  overviewTagEn?: string;
+  overviewTitleAr?: string;
+  overviewTitleEn?: string;
+  overviewImage?: string;
+  overviewNoteAr?: string;
+  overviewNoteEn?: string;
+
+  servicesTitleAr?: string;
+  servicesTitleEn?: string;
+  servicesSubtitleAr?: string;
+  servicesSubtitleEn?: string;
+
+  certificationsTitleAr?: string;
+  certificationsTitleEn?: string;
+  certificationsSubtitleAr?: string;
+  certificationsSubtitleEn?: string;
+  certificationsStatusAr?: string;
+  certificationsStatusEn?: string;
+
+  galleryTitleAr?: string;
+  galleryTitleEn?: string;
+  gallerySubtitleAr?: string;
+  gallerySubtitleEn?: string;
+
+  addressAr?: string;
+  addressEn?: string;
+  quoteBadgeAr?: string;
+  quoteBadgeEn?: string;
+  quoteTitleAr?: string;
+  quoteTitleEn?: string;
+  quoteSubtitleAr?: string;
+  quoteSubtitleEn?: string;
+  footerNoteAr?: string;
+  footerNoteEn?: string;
 }
 
 export interface QuoteRequest {

@@ -29,8 +29,10 @@ interface Props {
   onBack: () => void;
 }
 
-export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) => {
-  const { lang, openQuoteWithCategory, addQuote } = useApp();
+export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsidiary, onBack }) => {
+  const { lang, openQuoteWithCategory, addQuote, subsidiaries } = useApp();
+  const subsidiary = subsidiaries.find((s) => s.id === initialSubsidiary.id) || initialSubsidiary;
+
   const [activeTab, setActiveTab] = useState<'overview' | 'services' | 'certifications' | 'gallery' | 'contact'>('overview');
 
   const [quoteSent, setQuoteSent] = useState(false);
@@ -50,7 +52,7 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
       serviceName: `${subsidiary.nameAr} - ${formData.serviceName}`,
       propertyArea: 'حسب المعاينة',
       headcountNeeded: '1',
-      location: 'الرياض / المملكة العربية السعودية',
+      location: subsidiary.addressAr || 'الرياض / المملكة العربية السعودية',
       contractDuration: 'سنة كاملة',
       companyName: formData.companyName,
       contactName: formData.contactName,
@@ -61,6 +63,106 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
     setQuoteSent(true);
     setTimeout(() => setQuoteSent(false), 5000);
   };
+
+  const heroSubtitle = lang === 'ar'
+    ? (subsidiary.heroSubtitleAr || 'إحدى شركات مجموعة حارس ونقاء القابضة • إستقلالية تشغيلية كاملة')
+    : (subsidiary.heroSubtitleEn || 'A Subsidiary of Hares & Niqaa Holding Group • Complete Operational Autonomy');
+
+  const projectsLabel = lang === 'ar'
+    ? (subsidiary.projectsLabelAr || 'مشروع مكتمل')
+    : (subsidiary.projectsLabelEn || 'Completed Projects');
+
+  const clientsLabel = lang === 'ar'
+    ? (subsidiary.clientsLabelAr || 'عميل استراتيجي')
+    : (subsidiary.clientsLabelEn || 'Key Clients');
+
+  const establishedLabel = lang === 'ar'
+    ? (subsidiary.establishedLabelAr || 'سنة التأسيس')
+    : (subsidiary.establishedLabelEn || 'Established');
+
+  const complianceRate = subsidiary.complianceRate || '100%';
+  const complianceLabel = lang === 'ar'
+    ? (subsidiary.complianceLabelAr || 'التزام بالمعايير')
+    : (subsidiary.complianceLabelEn || 'Compliance');
+
+  const overviewTag = lang === 'ar'
+    ? (subsidiary.overviewTagAr || 'رؤيتنا ورسالتنا التشغيلية')
+    : (subsidiary.overviewTagEn || 'Mission & Core Vision');
+
+  const overviewTitle = lang === 'ar'
+    ? (subsidiary.overviewTitleAr || 'الريادة الميدانية والتميز الاحترافي في التنفيذ')
+    : (subsidiary.overviewTitleEn || 'Field Leadership & Operational Precision');
+
+  const overviewNote = lang === 'ar'
+    ? (subsidiary.overviewNoteAr || `تأسست عام ${subsidiary.establishedYear} بمواصفات قياسية`)
+    : (subsidiary.overviewNoteEn || `Established ${subsidiary.establishedYear} with benchmark standards`);
+
+  const servicesTitle = lang === 'ar'
+    ? (subsidiary.servicesTitleAr || 'الخدمات التخصصية للشركة')
+    : (subsidiary.servicesTitleEn || 'Subsidiary Services Portfolio');
+
+  const servicesSubtitle = lang === 'ar'
+    ? (subsidiary.servicesSubtitleAr || 'تقدم الشركة حلولاً تنفيذية شاملة ومصممة خصيصاً لتلبية احتياجات قطاع الأعمال والجهات الحكومية.')
+    : (subsidiary.servicesSubtitleEn || 'Tailored solutions designed for enterprise and governmental standards.');
+
+  const certificationsTitle = lang === 'ar'
+    ? (subsidiary.certificationsTitleAr || 'التراخيص والشهادات المعتمدة')
+    : (subsidiary.certificationsTitleEn || 'Official Certifications & Licensing');
+
+  const certificationsSubtitle = lang === 'ar'
+    ? (subsidiary.certificationsSubtitleAr || 'جميع أنشطة الشركة مرخصة رسمياً وخاضعة لرقابة واشتراطات الجهات المعنية.')
+    : (subsidiary.certificationsSubtitleEn || 'Fully compliant and licensed by official regulatory authorities.');
+
+  const certificationsStatus = lang === 'ar'
+    ? (subsidiary.certificationsStatusAr || 'سارية المفعول ومحدثة')
+    : (subsidiary.certificationsStatusEn || 'Active & Validated');
+
+  const galleryTitle = lang === 'ar'
+    ? (subsidiary.galleryTitleAr || 'صور التجهيزات والأعمال الميدانية')
+    : (subsidiary.galleryTitleEn || 'Field Operations Gallery');
+
+  const gallerySubtitle = lang === 'ar'
+    ? (subsidiary.gallerySubtitleAr || '')
+    : (subsidiary.gallerySubtitleEn || '');
+
+  const quoteBadge = lang === 'ar'
+    ? (subsidiary.quoteBadgeAr || `تواصل مباشر مع: ${subsidiary.nameAr}`)
+    : (subsidiary.quoteBadgeEn || `Direct Inquiry: ${subsidiary.nameEn}`);
+
+  const quoteTitle = lang === 'ar'
+    ? (subsidiary.quoteTitleAr || 'طلب عرض سعر مباشر من الشركة التابعة')
+    : (subsidiary.quoteTitleEn || 'Submit Direct Request for Proposal');
+
+  const quoteSubtitle = lang === 'ar'
+    ? (subsidiary.quoteSubtitleAr || 'سيتم توجيه طلبك مباشرة للفريق الهندسي والتشغيلي لهذه الشركة للرد خلال أقل من ساعة.')
+    : (subsidiary.quoteSubtitleEn || 'Your inquiry will be routed directly to this subsidiary operational leads.');
+
+  const footerNote = lang === 'ar'
+    ? (subsidiary.footerNoteAr || `${subsidiary.nameAr} • إحدى شركات مجموعة حارس ونقاء القابضة`)
+    : (subsidiary.footerNoteEn || `${subsidiary.nameEn} • A Subsidiary of Hares & Niqaa Holding Group`);
+
+  const currentServices = lang === 'ar' ? subsidiary.servicesAr : subsidiary.servicesEn;
+  const currentDetailedServices = subsidiary.detailedServices && subsidiary.detailedServices.length > 0
+    ? subsidiary.detailedServices
+    : currentServices.map((srv, idx) => ({
+        id: `srv-${idx}`,
+        titleAr: subsidiary.servicesAr[idx] || srv,
+        titleEn: subsidiary.servicesEn[idx] || srv,
+        descAr: 'تطبيق أعلى معايير الجودة والسلامة مع توفير تقارير دورية وإشراف ميداني مستمر 24/7.',
+        descEn: 'Adhering to strict safety, continuous 24/7 supervision and automated reporting.',
+      }));
+
+  const currentCerts = lang === 'ar'
+    ? (subsidiary.certificationsAr && subsidiary.certificationsAr.length > 0
+        ? subsidiary.certificationsAr
+        : ['مرخصة رسمياً من السلطات المعنية', 'شهادة ISO للجودة والسلامة المهنية', 'عضوية منظمة سلامة المنشآت الدولية'])
+    : (subsidiary.certificationsEn && subsidiary.certificationsEn.length > 0
+        ? subsidiary.certificationsEn
+        : ['Officially licensed by regulatory authorities', 'ISO Certified for Occupational Health & Safety', 'Member of International Facilities Security Association']);
+
+  const currentGallery = subsidiary.galleryImages && subsidiary.galleryImages.length > 0
+    ? subsidiary.galleryImages
+    : [subsidiary.heroImage || subsidiary.logoUrl];
 
   return (
     <div className="min-h-screen bg-[#060D17] text-slate-100 font-sans relative selection:bg-[#C9A961] selection:text-[#060D17]">
@@ -151,7 +253,7 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C9A961]/15 border border-[#C9A961]/40 text-[#C9A961] text-xs font-bold shadow-xl"
           >
             <Building2 className="w-4 h-4" />
-            <span>إحدى شركات مجموعة حارس ونقاء القابضة • إستقلالية تشغيلية كاملة</span>
+            <span>{heroSubtitle}</span>
           </motion.div>
 
           <motion.h1
@@ -190,22 +292,22 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
           >
             <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
               <div className="text-2xl font-bold text-[#C9A961]">+{subsidiary.projectsCount}</div>
-              <div className="text-xs text-slate-400 mt-1">{lang === 'ar' ? 'مشروع مكتمل' : 'Completed Projects'}</div>
+              <div className="text-xs text-slate-400 mt-1">{projectsLabel}</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
               <div className="text-2xl font-bold text-[#C9A961]">+{subsidiary.clientsCount}</div>
-              <div className="text-xs text-slate-400 mt-1">{lang === 'ar' ? 'عميل استراتيجي' : 'Key Clients'}</div>
+              <div className="text-xs text-slate-400 mt-1">{clientsLabel}</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
               <div className="text-2xl font-bold text-white">{subsidiary.establishedYear}</div>
-              <div className="text-xs text-slate-400 mt-1">{lang === 'ar' ? 'سنة التأسيس' : 'Established'}</div>
+              <div className="text-xs text-slate-400 mt-1">{establishedLabel}</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
-              <div className="text-2xl font-bold text-emerald-400">100%</div>
-              <div className="text-xs text-slate-400 mt-1">{lang === 'ar' ? 'التزام بالمعايير' : 'Compliance'}</div>
+              <div className="text-2xl font-bold text-emerald-400">{complianceRate}</div>
+              <div className="text-xs text-slate-400 mt-1">{complianceLabel}</div>
             </div>
           </motion.div>
         </div>
@@ -216,10 +318,10 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-center gap-2 sm:gap-6 overflow-x-auto py-3 no-scrollbar">
           {[
             { id: 'overview', labelAr: 'نظرة عامة ورؤية الشركة', labelEn: 'Overview & Mission' },
-            { id: 'services', labelAr: 'خدمات الشركة المخصصة', labelEn: 'Specialized Services' },
-            { id: 'certifications', labelAr: 'التراخيص والاعتمادات', labelEn: 'Certifications' },
-            { id: 'gallery', labelAr: 'معرض الأداء والميدان', labelEn: 'Field Gallery' },
-            { id: 'contact', labelAr: 'طلب عرض سعر ومراستنا', labelEn: 'Contact & RFQ' },
+            { id: 'services', labelAr: servicesTitle, labelEn: 'Specialized Services' },
+            { id: 'certifications', labelAr: certificationsTitle, labelEn: 'Certifications' },
+            { id: 'gallery', labelAr: galleryTitle, labelEn: 'Field Gallery' },
+            { id: 'contact', labelAr: 'طلب عرض سعر ومراسلتنا', labelEn: 'Contact & RFQ' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -244,10 +346,10 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6">
               <span className="px-3 py-1 rounded-full bg-[#C9A961]/20 text-[#C9A961] text-xs font-bold">
-                {lang === 'ar' ? 'رؤيتنا ورسالتنا التشغيلية' : 'Mission & Core Vision'}
+                {overviewTag}
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold text-white font-arabic leading-snug">
-                {lang === 'ar' ? 'الريادة الميدانية والتميز الاحترافي في التنفيذ' : 'Field Leadership & Operational Precision'}
+                {overviewTitle}
               </h2>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
                 {lang === 'ar'
@@ -267,15 +369,15 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
 
             <div className="relative rounded-3xl overflow-hidden border border-[#C9A961]/30 shadow-2xl group">
               <img
-                src={subsidiary.heroImage || subsidiary.logoUrl}
+                src={subsidiary.overviewImage || subsidiary.heroImage || subsidiary.logoUrl}
                 alt={subsidiary.nameAr}
                 className="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#060D17] via-transparent to-transparent opacity-80" />
               <div className="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-[#0B1929]/90 backdrop-blur-md border border-slate-800">
-                <div className="text-[#C9A961] font-bold text-xs">{lang === 'ar' ? 'تاريخ التأسيس الخبرة' : 'Est. Legacy'}</div>
+                <div className="text-[#C9A961] font-bold text-xs">{lang === 'ar' ? 'تاريخ التأسيس والخبرة' : 'Est. Legacy'}</div>
                 <div className="text-white text-base font-bold mt-1">
-                  {lang === 'ar' ? `تأسست عام ${subsidiary.establishedYear} بمواصفات قياسية` : `Established ${subsidiary.establishedYear}`}
+                  {overviewNote}
                 </div>
               </div>
             </div>
@@ -287,42 +389,42 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
-                {lang === 'ar' ? 'الخدمات التخصصية للشركة' : 'Subsidiary Services Portfolio'}
+                {servicesTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
-                {lang === 'ar'
-                  ? 'تقدم الشركة حلولاً تنفيذية شاملة ومصممة خصيصاً لتلبية احتياجات قطاع الأعمال والجهات الحكومية.'
-                  : 'Tailored solutions designed for enterprise and governmental standards.'}
+                {servicesSubtitle}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(lang === 'ar' ? subsidiary.servicesAr : subsidiary.servicesEn).map((srv, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-[#0B1929] border border-slate-800 hover:border-[#C9A961]/50 transition-all space-y-4">
-                  <div className="w-12 h-12 rounded-xl gold-gradient-bg text-[#0B1929] flex items-center justify-center font-black text-lg shadow-md">
-                    0{idx + 1}
+              {currentDetailedServices.map((srv, idx) => {
+                const title = lang === 'ar' ? srv.titleAr : srv.titleEn;
+                const desc = lang === 'ar' ? (srv.descAr || 'حلول تنفيذية وفق أعلى المعايير القياسية العالمية.') : (srv.descEn || 'Operational delivery adhering to top industry standards.');
+                return (
+                  <div key={srv.id || idx} className="p-6 rounded-2xl bg-[#0B1929] border border-slate-800 hover:border-[#C9A961]/50 transition-all space-y-4">
+                    <div className="w-12 h-12 rounded-xl gold-gradient-bg text-[#0B1929] flex items-center justify-center font-black text-lg shadow-md">
+                      0{idx + 1}
+                    </div>
+                    <h3 className="text-lg font-bold text-white font-arabic">{title}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      {desc}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, serviceName: title }));
+                        setActiveTab('contact');
+                        setTimeout(() => {
+                          document.getElementById('subsidiary-quote')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 100);
+                      }}
+                      className="text-xs font-bold text-[#C9A961] flex items-center gap-1 hover:underline cursor-pointer"
+                    >
+                      <span>{lang === 'ar' ? 'طلب هذه الخدمة للشركة' : 'Request This Service'}</span>
+                      <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
+                    </button>
                   </div>
-                  <h3 className="text-lg font-bold text-white font-arabic">{srv}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    {lang === 'ar'
-                      ? 'تطبيق أعلى معايير الجودة والسلامة مع توفير تقارير دورية وإشراف ميداني مستمر 24/7.'
-                      : 'Adhering to strict safety, continuous 24/7 supervision and automated reporting.'}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setFormData((prev) => ({ ...prev, serviceName: srv }));
-                      setActiveTab('contact');
-                      setTimeout(() => {
-                        document.getElementById('subsidiary-quote')?.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
-                    }}
-                    className="text-xs font-bold text-[#C9A961] flex items-center gap-1 hover:underline cursor-pointer"
-                  >
-                    <span>{lang === 'ar' ? 'طلب هذه الخدمة للشركة' : 'Request This Service'}</span>
-                    <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -332,27 +434,21 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
-                {lang === 'ar' ? 'التراخيص والشهادات المعتمدة' : 'Official Certifications & Licensing'}
+                {certificationsTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
-                {lang === 'ar'
-                  ? 'جميع أنشطة الشركة مرخصة رسمياً وخاضعة لرقابة واشتراطات الجهات المعنية.'
-                  : 'Fully compliant and licensed by official regulatory authorities.'}
+                {certificationsSubtitle}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {(subsidiary.certificationsAr || [
-                'مرخصة رسمياً من السلطات المعنية',
-                'شهادة ISO للجودة والسلامة المهنية',
-                'عضوية منظمة سلامة المنشآت الدولية',
-              ]).map((cert, idx) => (
+              {currentCerts.map((cert, idx) => (
                 <div key={idx} className="p-6 rounded-2xl bg-[#0B1929] border border-slate-800 text-center space-y-3">
                   <div className="w-12 h-12 rounded-full bg-[#C9A961]/20 text-[#C9A961] flex items-center justify-center mx-auto">
                     <Award className="w-6 h-6" />
                   </div>
                   <h4 className="text-sm font-bold text-white font-arabic">{cert}</h4>
-                  <span className="text-[10px] text-emerald-400 font-semibold block">سارية المفعول ومحدثة</span>
+                  <span className="text-[10px] text-emerald-400 font-semibold block">{certificationsStatus}</span>
                 </div>
               ))}
             </div>
@@ -364,12 +460,17 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
-                {lang === 'ar' ? 'صور التجهيزات والأعمال الميدانية' : 'Field Operations Gallery'}
+                {galleryTitle}
               </h2>
+              {gallerySubtitle && (
+                <p className="text-xs sm:text-sm text-slate-400">
+                  {gallerySubtitle}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {(subsidiary.galleryImages || [subsidiary.heroImage || subsidiary.logoUrl]).map((img, idx) => (
+              {currentGallery.map((img, idx) => (
                 <div key={idx} className="rounded-2xl overflow-hidden border border-slate-800 group h-64">
                   <img
                     src={img}
@@ -386,17 +487,47 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
         <div id="subsidiary-quote" className="p-8 sm:p-12 rounded-3xl bg-[#0B1929] border border-[#C9A961]/40 space-y-8 shadow-2xl">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="px-3 py-1 rounded-full bg-[#C9A961]/20 text-[#C9A961] text-xs font-bold">
-              {lang === 'ar' ? `تواصل مباشر مع: ${subsidiary.nameAr}` : `Direct Inquiry: ${subsidiary.nameEn}`}
+              {quoteBadge}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
-              {lang === 'ar' ? 'طلب عرض سعر مباشر من الشركة التابعة' : 'Submit Direct Request for Proposal'}
+              {quoteTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400">
-              {lang === 'ar'
-                ? 'سيتم توجيه طلبك مباشرة للفريق الهندسي والتشغيلي لهذه الشركة للرد خلال أقل من ساعة.'
-                : 'Your inquiry will be routed directly to this subsidiary operational leads.'}
+              {quoteSubtitle}
             </p>
           </div>
+
+          {/* Quick Contact Row if available */}
+          {(subsidiary.phone || subsidiary.email || subsidiary.addressAr || subsidiary.websiteUrl) && (
+            <div className="flex flex-wrap items-center justify-center gap-6 py-4 px-6 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300">
+              {subsidiary.phone && (
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#C9A961]" />
+                  <a href={`tel:${subsidiary.phone}`} className="hover:text-white" dir="ltr">{subsidiary.phone}</a>
+                </div>
+              )}
+              {subsidiary.email && (
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#C9A961]" />
+                  <a href={`mailto:${subsidiary.email}`} className="hover:text-white">{subsidiary.email}</a>
+                </div>
+              )}
+              {(subsidiary.addressAr || subsidiary.addressEn) && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#C9A961]" />
+                  <span>{lang === 'ar' ? subsidiary.addressAr : (subsidiary.addressEn || subsidiary.addressAr)}</span>
+                </div>
+              )}
+              {subsidiary.websiteUrl && (
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-[#C9A961]" />
+                  <a href={subsidiary.websiteUrl} target="_blank" rel="noreferrer" className="hover:text-white text-[#C9A961] underline">
+                    {lang === 'ar' ? 'الموقع الرسمي' : 'Official Portal'}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
 
           {quoteSent ? (
             <div className="p-6 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 text-center space-y-3">
@@ -505,7 +636,7 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary, onBack }) =>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={subsidiary.logoUrl} alt={subsidiary.nameAr} className="w-8 h-8 rounded-lg object-cover" />
-            <span>{lang === 'ar' ? subsidiary.nameAr : subsidiary.nameEn} • إحدى شركات مجموعة حارس ونقاء القابضة</span>
+            <span>{footerNote}</span>
           </div>
 
           <button

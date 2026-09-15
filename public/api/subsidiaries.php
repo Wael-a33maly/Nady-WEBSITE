@@ -58,18 +58,68 @@ if ($method === 'POST') {
     $input = getJsonInput();
     $id = !empty($input['id']) ? $input['id'] : 'sub-' . time() . '-' . rand(10, 99);
 
+    $extraFields = [
+        'heroSubtitleAr'           => $input['heroSubtitleAr'] ?? null,
+        'heroSubtitleEn'           => $input['heroSubtitleEn'] ?? null,
+        'projectsLabelAr'          => $input['projectsLabelAr'] ?? null,
+        'projectsLabelEn'          => $input['projectsLabelEn'] ?? null,
+        'clientsLabelAr'           => $input['clientsLabelAr'] ?? null,
+        'clientsLabelEn'           => $input['clientsLabelEn'] ?? null,
+        'establishedLabelAr'       => $input['establishedLabelAr'] ?? null,
+        'establishedLabelEn'       => $input['establishedLabelEn'] ?? null,
+        'complianceRate'           => $input['complianceRate'] ?? null,
+        'complianceLabelAr'        => $input['complianceLabelAr'] ?? null,
+        'complianceLabelEn'        => $input['complianceLabelEn'] ?? null,
+        'overviewTagAr'            => $input['overviewTagAr'] ?? null,
+        'overviewTagEn'            => $input['overviewTagEn'] ?? null,
+        'overviewTitleAr'          => $input['overviewTitleAr'] ?? null,
+        'overviewTitleEn'          => $input['overviewTitleEn'] ?? null,
+        'overviewImage'            => $input['overviewImage'] ?? null,
+        'overviewNoteAr'           => $input['overviewNoteAr'] ?? null,
+        'overviewNoteEn'           => $input['overviewNoteEn'] ?? null,
+        'servicesTitleAr'          => $input['servicesTitleAr'] ?? null,
+        'servicesTitleEn'          => $input['servicesTitleEn'] ?? null,
+        'servicesSubtitleAr'       => $input['servicesSubtitleAr'] ?? null,
+        'servicesSubtitleEn'       => $input['servicesSubtitleEn'] ?? null,
+        'detailedServices'         => $input['detailedServices'] ?? null,
+        'certificationsTitleAr'    => $input['certificationsTitleAr'] ?? null,
+        'certificationsTitleEn'    => $input['certificationsTitleEn'] ?? null,
+        'certificationsSubtitleAr' => $input['certificationsSubtitleAr'] ?? null,
+        'certificationsSubtitleEn' => $input['certificationsSubtitleEn'] ?? null,
+        'certificationsStatusAr'   => $input['certificationsStatusAr'] ?? null,
+        'certificationsStatusEn'   => $input['certificationsStatusEn'] ?? null,
+        'galleryTitleAr'           => $input['galleryTitleAr'] ?? null,
+        'galleryTitleEn'           => $input['galleryTitleEn'] ?? null,
+        'gallerySubtitleAr'        => $input['gallerySubtitleAr'] ?? null,
+        'gallerySubtitleEn'        => $input['gallerySubtitleEn'] ?? null,
+        'addressAr'                => $input['addressAr'] ?? null,
+        'addressEn'                => $input['addressEn'] ?? null,
+        'quoteBadgeAr'             => $input['quoteBadgeAr'] ?? null,
+        'quoteBadgeEn'             => $input['quoteBadgeEn'] ?? null,
+        'quoteTitleAr'             => $input['quoteTitleAr'] ?? null,
+        'quoteTitleEn'             => $input['quoteTitleEn'] ?? null,
+        'quoteSubtitleAr'          => $input['quoteSubtitleAr'] ?? null,
+        'quoteSubtitleEn'          => $input['quoteSubtitleEn'] ?? null,
+        'footerNoteAr'             => $input['footerNoteAr'] ?? null,
+        'footerNoteEn'             => $input['footerNoteEn'] ?? null,
+    ];
+
     try {
+        try {
+            $pdo->exec("ALTER TABLE subsidiaries ADD COLUMN details_json TEXT DEFAULT NULL");
+        } catch (Throwable $t) {}
+
         $stmt = $pdo->prepare('
             INSERT INTO subsidiaries (
                 id, name_ar, name_en, tagline_ar, tagline_en, logo_url, hero_image,
                 icon_name, category, description_ar, description_en, detailed_mission_ar, detailed_mission_en,
                 services_ar, services_en, certifications_ar, certifications_en, gallery_images,
-                clients_count, projects_count, established_year, email, phone, website_url, badge_ar, badge_en, created_at
+                clients_count, projects_count, established_year, email, phone, website_url, badge_ar, badge_en, details_json, created_at
             ) VALUES (
                 :id, :name_ar, :name_en, :tagline_ar, :tagline_en, :logo_url, :hero_image,
                 :icon_name, :category, :description_ar, :description_en, :detailed_mission_ar, :detailed_mission_en,
                 :services_ar, :services_en, :certifications_ar, :certifications_en, :gallery_images,
-                :clients_count, :projects_count, :established_year, :email, :phone, :website_url, :badge_ar, :badge_en, NOW()
+                :clients_count, :projects_count, :established_year, :email, :phone, :website_url, :badge_ar, :badge_en, :details_json, NOW()
             )
         ');
         $stmt->execute([
@@ -99,6 +149,7 @@ if ($method === 'POST') {
             'website_url'         => $input['websiteUrl'] ?? null,
             'badge_ar'            => $input['badgeAr'] ?? null,
             'badge_en'            => $input['badgeEn'] ?? null,
+            'details_json'        => json_encode($extraFields, JSON_UNESCAPED_UNICODE),
         ]);
 
         sendJson(['success' => true, 'id' => $id, 'message' => 'تمت إضافة الشركة التابعة بنجاح.']);
@@ -114,7 +165,57 @@ if ($method === 'PUT') {
 
     $input = getJsonInput();
 
+    $extraFields = [
+        'heroSubtitleAr'           => $input['heroSubtitleAr'] ?? null,
+        'heroSubtitleEn'           => $input['heroSubtitleEn'] ?? null,
+        'projectsLabelAr'          => $input['projectsLabelAr'] ?? null,
+        'projectsLabelEn'          => $input['projectsLabelEn'] ?? null,
+        'clientsLabelAr'           => $input['clientsLabelAr'] ?? null,
+        'clientsLabelEn'           => $input['clientsLabelEn'] ?? null,
+        'establishedLabelAr'       => $input['establishedLabelAr'] ?? null,
+        'establishedLabelEn'       => $input['establishedLabelEn'] ?? null,
+        'complianceRate'           => $input['complianceRate'] ?? null,
+        'complianceLabelAr'        => $input['complianceLabelAr'] ?? null,
+        'complianceLabelEn'        => $input['complianceLabelEn'] ?? null,
+        'overviewTagAr'            => $input['overviewTagAr'] ?? null,
+        'overviewTagEn'            => $input['overviewTagEn'] ?? null,
+        'overviewTitleAr'          => $input['overviewTitleAr'] ?? null,
+        'overviewTitleEn'          => $input['overviewTitleEn'] ?? null,
+        'overviewImage'            => $input['overviewImage'] ?? null,
+        'overviewNoteAr'           => $input['overviewNoteAr'] ?? null,
+        'overviewNoteEn'           => $input['overviewNoteEn'] ?? null,
+        'servicesTitleAr'          => $input['servicesTitleAr'] ?? null,
+        'servicesTitleEn'          => $input['servicesTitleEn'] ?? null,
+        'servicesSubtitleAr'       => $input['servicesSubtitleAr'] ?? null,
+        'servicesSubtitleEn'       => $input['servicesSubtitleEn'] ?? null,
+        'detailedServices'         => $input['detailedServices'] ?? null,
+        'certificationsTitleAr'    => $input['certificationsTitleAr'] ?? null,
+        'certificationsTitleEn'    => $input['certificationsTitleEn'] ?? null,
+        'certificationsSubtitleAr' => $input['certificationsSubtitleAr'] ?? null,
+        'certificationsSubtitleEn' => $input['certificationsSubtitleEn'] ?? null,
+        'certificationsStatusAr'   => $input['certificationsStatusAr'] ?? null,
+        'certificationsStatusEn'   => $input['certificationsStatusEn'] ?? null,
+        'galleryTitleAr'           => $input['galleryTitleAr'] ?? null,
+        'galleryTitleEn'           => $input['galleryTitleEn'] ?? null,
+        'gallerySubtitleAr'        => $input['gallerySubtitleAr'] ?? null,
+        'gallerySubtitleEn'        => $input['gallerySubtitleEn'] ?? null,
+        'addressAr'                => $input['addressAr'] ?? null,
+        'addressEn'                => $input['addressEn'] ?? null,
+        'quoteBadgeAr'             => $input['quoteBadgeAr'] ?? null,
+        'quoteBadgeEn'             => $input['quoteBadgeEn'] ?? null,
+        'quoteTitleAr'             => $input['quoteTitleAr'] ?? null,
+        'quoteTitleEn'             => $input['quoteTitleEn'] ?? null,
+        'quoteSubtitleAr'          => $input['quoteSubtitleAr'] ?? null,
+        'quoteSubtitleEn'          => $input['quoteSubtitleEn'] ?? null,
+        'footerNoteAr'             => $input['footerNoteAr'] ?? null,
+        'footerNoteEn'             => $input['footerNoteEn'] ?? null,
+    ];
+
     try {
+        try {
+            $pdo->exec("ALTER TABLE subsidiaries ADD COLUMN details_json TEXT DEFAULT NULL");
+        } catch (Throwable $t) {}
+
         $stmt = $pdo->prepare('
             UPDATE subsidiaries SET
                 name_ar = :name_ar,
@@ -141,7 +242,8 @@ if ($method === 'PUT') {
                 phone = :phone,
                 website_url = :website_url,
                 badge_ar = :badge_ar,
-                badge_en = :badge_en
+                badge_en = :badge_en,
+                details_json = :details_json
             WHERE id = :id
         ');
         $stmt->execute([
@@ -171,6 +273,7 @@ if ($method === 'PUT') {
             'website_url'         => $input['websiteUrl'] ?? null,
             'badge_ar'            => $input['badgeAr'] ?? null,
             'badge_en'            => $input['badgeEn'] ?? null,
+            'details_json'        => json_encode($extraFields, JSON_UNESCAPED_UNICODE),
         ]);
 
         sendJson(['success' => true, 'message' => 'تم تحديث الشركة التابعة بنجاح.']);

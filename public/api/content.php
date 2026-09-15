@@ -181,7 +181,12 @@ try {
     $subsStmt = $pdo->query('SELECT * FROM subsidiaries ORDER BY sort_order ASC, created_at DESC');
     $subsidiaries = [];
     while ($row = $subsStmt->fetch()) {
-        $subsidiaries[] = [
+        $extraDetails = !empty($row['details_json']) ? json_decode($row['details_json'], true) : [];
+        if (!is_array($extraDetails)) {
+            $extraDetails = [];
+        }
+
+        $baseSub = [
             'id'                => $row['id'],
             'nameAr'            => $row['name_ar'],
             'nameEn'            => $row['name_en'],
@@ -209,6 +214,7 @@ try {
             'badgeAr'           => $row['badge_ar'] ?? null,
             'badgeEn'           => $row['badge_en'] ?? null,
         ];
+        $subsidiaries[] = array_merge($baseSub, $extraDetails);
     }
 
     // 6. Subsidiary Categories

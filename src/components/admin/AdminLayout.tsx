@@ -21,12 +21,7 @@ import {
   MessageSquare,
   Layers,
   Settings,
-  LogOut,
-  Globe,
-  ExternalLink,
   ShieldCheck,
-  ChevronLeft,
-  ChevronRight,
   Menu,
   X,
   Building2,
@@ -39,10 +34,26 @@ import {
   Award,
   Users,
   Handshake,
+  Globe,
+  ExternalLink,
+  LogOut,
+  ChevronLeft,
 } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
-  const { lang, setLang, logoutAdmin, quotes, inquiries, jobApplications, theme, toggleTheme } = useApp();
+  const { lang, setLang, quotes, inquiries, jobApplications, theme, toggleTheme, logoutAdmin } = useApp();
+
+  const navigateToHome = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new Event('popstate'));
+  };
+
+  const handleLogout = () => {
+    logoutAdmin();
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new Event('popstate'));
+  };
 
   const [activeTab, setActiveTab] = useState<
     | 'dashboard'
@@ -60,18 +71,6 @@ export const AdminLayout: React.FC = () => {
     | 'settings'
   >('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const navigateToHome = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.history.pushState({}, '', '/');
-    window.dispatchEvent(new Event('popstate'));
-  };
-
-  const handleLogout = () => {
-    logoutAdmin();
-    window.history.pushState({}, '', '/');
-    window.dispatchEvent(new Event('popstate'));
-  };
 
   const newQuotesBadge = quotes.filter((q) => q.status === 'new').length;
   const unreadInquiriesBadge = inquiries.filter((i) => i.status === 'unread').length;
@@ -188,11 +187,11 @@ export const AdminLayout: React.FC = () => {
       <aside
         className={`fixed md:static inset-y-0 ${
           lang === 'ar' ? 'right-0' : 'left-0'
-        } z-50 w-72 bg-white dark:bg-[#0B1929] border-e border-slate-200 dark:border-slate-800 flex flex-col justify-between transition-transform duration-300 shadow-lg md:shadow-none ${
+        } z-50 w-72 bg-white dark:bg-[#0B1929] border-e border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 shadow-lg md:shadow-none ${
           sidebarOpen ? 'translate-x-0' : 'max-md:-translate-x-full max-md:rtl:translate-x-full'
         }`}
       >
-        <div className="p-5 space-y-6 overflow-y-auto max-h-[85vh]">
+        <div className="p-5 space-y-6 overflow-y-auto flex-1">
           <div className="flex items-center justify-between">
             <BrandLogo />
             <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-600 dark:text-blue-400 text-[10px] font-extrabold uppercase font-mono">
@@ -240,53 +239,81 @@ export const AdminLayout: React.FC = () => {
             })}
           </nav>
         </div>
-
-        {/* Sidebar Footer Controls */}
-        <div className="p-5 border-t border-slate-200 dark:border-slate-800 space-y-3">
-          <a
-            href="/"
-            onClick={navigateToHome}
-            className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold flex items-center justify-between transition-all cursor-pointer"
-          >
-            <span className="flex items-center gap-2">
-              <ExternalLink className="w-3.5 h-3.5 text-[#C9A961]" />
-              {lang === 'ar' ? 'عرض الواجهة العامة' : 'View Public Site'}
-            </span>
-            {lang === 'ar' ? <ChevronLeft className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-          </a>
-
-          <div className="flex items-center justify-between pt-1 gap-2">
-            <button
-              onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-300 hover:text-[#C9A961] text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
-            >
-              <Globe className="w-3.5 h-3.5 text-[#C9A961]" />
-              <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-300 hover:text-[#C9A961] text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
-              title="Toggle Light/Dark Theme"
-            >
-              {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-blue-600" />}
-              <span>{theme === 'dark' ? (lang === 'ar' ? 'نهار' : 'Light') : (lang === 'ar' ? 'ليل' : 'Dark')}</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-colors"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>{lang === 'ar' ? 'خروج' : 'Logout'}</span>
-            </button>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 p-6 sm:p-10 overflow-y-auto min-h-screen">
-        {activeTab === 'dashboard' && <AdminDashboard />}
+        {/* Top Header Bar when not on Analytics Dashboard (so Language, Theme, View Site, Logout are always accessible in the header) */}
+        {activeTab !== 'dashboard' && (
+          <div className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab('dashboard')}
+                className="px-3 py-1.5 rounded-xl bg-slate-200/70 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5 text-[#C9A961]" />
+                <span>{lang === 'ar' ? 'العودة للوحة القيادة' : 'Back to Dashboard'}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Language Switch */}
+              <button
+                type="button"
+                onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')}
+                className="py-1.5 px-3 rounded-xl bg-white dark:bg-[#112236] hover:bg-slate-50 dark:hover:bg-[#162b45] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#C9A961] dark:hover:text-[#C9A961] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                title={lang === 'ar' ? 'Switch to English' : 'التحويل للغة العربية'}
+              >
+                <Globe className="w-3.5 h-3.5 text-[#C9A961]" />
+                <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
+              </button>
+
+              {/* Theme Toggle */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="py-1.5 px-3 rounded-xl bg-white dark:bg-[#112236] hover:bg-slate-50 dark:hover:bg-[#162b45] border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-[#C9A961] dark:hover:text-[#C9A961] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                title={theme === 'dark' ? 'التبديل إلى الوضع النهاري' : 'التبديل إلى الوضع الليلي'}
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{lang === 'ar' ? 'نهار' : 'Light'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-3.5 h-3.5 text-blue-600" />
+                    <span>{lang === 'ar' ? 'ليل' : 'Dark'}</span>
+                  </>
+                )}
+              </button>
+
+              {/* View Front-End Site */}
+              <a
+                href="/"
+                onClick={navigateToHome}
+                className="py-1.5 px-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#112236] dark:hover:bg-[#162b45] border border-slate-200 dark:border-slate-800 hover:border-[#C9A961] text-slate-700 dark:text-slate-200 hover:text-[#C9A961] dark:hover:text-[#C9A961] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#C9A961]" />
+                <span className="hidden sm:inline">{lang === 'ar' ? 'عرض الواجهة' : 'View Site'}</span>
+              </a>
+
+              {/* Logout */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="py-1.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 border border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                title={lang === 'ar' ? 'تسجيل الخروج' : 'Logout'}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>{lang === 'ar' ? 'خروج' : 'Logout'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'dashboard' && <AdminDashboard onNavigateTab={setActiveTab} />}
         {activeTab === 'subsidiaries' && <SubsidiariesManager />}
         {activeTab === 'categories' && <CategoriesManager />}
         {activeTab === 'whyUs' && <WhyUsManager />}

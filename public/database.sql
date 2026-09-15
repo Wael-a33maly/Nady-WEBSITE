@@ -249,6 +249,7 @@ CREATE TABLE `subsidiaries` (
   `website_url` VARCHAR(255) DEFAULT NULL,
   `badge_ar` VARCHAR(100) DEFAULT NULL,
   `badge_en` VARCHAR(100) DEFAULT NULL,
+  `details_json` TEXT DEFAULT NULL,
   `sort_order` INT DEFAULT 0,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
