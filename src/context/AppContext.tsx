@@ -637,8 +637,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteWhyUsFeature = (id: string) => {
-    setWhyUsFeatures((prev) => prev.filter((item) => item.id !== id));
-    deleteWhyUsFeatureApi(id).catch(() => {});
+    const cleanId = String(id).trim();
+    setWhyUsFeatures((prev) => {
+      const updated = prev.filter((item) => String(item.id).trim() !== cleanId);
+      try {
+        localStorage.setItem('hn_why_us_features', JSON.stringify(updated));
+      } catch {
+        // ignore localStorage quota errors
+      }
+      return updated;
+    });
+    deleteWhyUsFeatureApi(cleanId).catch(() => {});
   };
 
   const addService = (s: ServiceItem) => {
