@@ -36,8 +36,8 @@ export const PrivacyModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         <div className="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed max-h-[60vh] overflow-y-auto pr-2 font-arabic">
           <p>
             {lang === 'ar'
-              ? 'تلتزم شركة حارس ونقاء للخدمات الأمنية والنظافة بحماية بيانات جميع عملائنا والممثلين الرسميين للشركات. جميع البيانات والمعلومات الواردة في طلبات عروض الأسعار تُعامل بشرية تامة ووفق الأنظمة واللوائح المعمول بها بالمملكة.'
-              : 'Hares & Niqaa Co. is committed to preserving client confidentiality. All specs and requests submitted via our portal are treated strictly under non-disclosure governance.'}
+              ? `تلتزم ${settings.companyNameAr || 'شركة المحيط الفضي'} بحماية بيانات جميع عملائنا والممثلين الرسميين للشركات. جميع البيانات والمعلومات الواردة في طلبات عروض الأسعار تُعامل بسرية تامة ووفق الأنظمة واللوائح المعمول بها بالمملكة.`
+              : `${settings.companyNameEn || 'Silver Ocean Co.'} is committed to preserving client confidentiality. All specs and requests submitted via our portal are treated strictly under non-disclosure governance.`}
           </p>
           <h4 className="font-bold text-[#C9A961]">{lang === 'ar' ? '1. حماية البيانات والمعلومات' : '1. Data Governance'}</h4>
           <p>

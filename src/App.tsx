@@ -25,7 +25,7 @@ import { AdminLogin } from './components/admin/AdminLogin';
 import { AdminLayout } from './components/admin/AdminLayout';
 
 export function App() {
-  const { lang, isAdmin, theme, activeSubsidiaryView, setActiveSubsidiaryView, isCareersPageOpen, setIsCareersPageOpen } = useApp();
+  const { lang, isAdmin, theme, activeSubsidiaryView, setActiveSubsidiaryView, isCareersPageOpen, setIsCareersPageOpen, settings } = useApp();
 
   // Track URL pathname & hash for route changes
   const [currentRoute, setCurrentRoute] = React.useState(
@@ -59,11 +59,14 @@ export function App() {
       document.documentElement.classList.remove('dark');
     }
 
+    const appNameAr = settings.logoTextAr || settings.companyNameAr || 'المحيط الفضي';
+    const appNameEn = settings.logoTextEn || settings.companyNameEn || 'Silver Ocean';
+
     document.title =
       lang === 'ar'
-        ? 'حارس ونقاء | شركة الأمن والحراسة والنظافة العامة بالمملكة'
-        : 'Hares & Niqaa | Enterprise Security & Commercial Cleaning Co.';
-  }, [lang, theme]);
+        ? `${appNameAr} | شركة الأمن والحراسة والنظافة العامة بالمملكة`
+        : `${appNameEn} | Enterprise Security & Commercial Cleaning Co.`;
+  }, [lang, theme, settings.logoTextAr, settings.logoTextEn, settings.companyNameAr, settings.companyNameEn]);
 
   // If in Admin Route
   if (isExplicitAdminRoute) {

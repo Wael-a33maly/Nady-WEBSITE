@@ -22,7 +22,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 export const SubsidiariesSection: React.FC = () => {
-  const { lang, subsidiaries, subsidiaryCategories, setActiveSubsidiaryView, openQuoteWithCategory } = useApp();
+  const { lang, subsidiaries, subsidiaryCategories, setActiveSubsidiaryView, openQuoteWithCategory, settings } = useApp();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedSub, setSelectedSub] = useState<SubsidiaryCompany | null>(null);
 
@@ -51,7 +51,7 @@ export const SubsidiariesSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C9A961]/10 border border-[#C9A961]/30 text-[#C9A961] text-xs font-bold tracking-wider uppercase">
             <Building2 className="w-4 h-4 text-[#C9A961]" />
-            <span>{lang === 'ar' ? 'منظومة حارس ونقاء القابضة' : 'Hares & Niqaa Group Portfolio'}</span>
+            <span>{lang === 'ar' ? `منظومة ${settings.logoTextAr || 'المحيط الفضي'} القابضة` : `${settings.logoTextEn || 'Silver Ocean'} Group Portfolio`}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white font-arabic">

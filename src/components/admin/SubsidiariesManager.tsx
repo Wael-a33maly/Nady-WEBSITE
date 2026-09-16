@@ -42,6 +42,7 @@ export const SubsidiariesManager: React.FC = () => {
     subsidiaryCategories,
     addSubsidiaryCategory,
     deleteSubsidiaryCategory,
+    settings,
   } = useApp();
 
   const [editingSub, setEditingSub] = useState<SubsidiaryCompany | null>(null);
@@ -89,14 +90,14 @@ export const SubsidiariesManager: React.FC = () => {
     clientsCount: 50,
     projectsCount: 120,
     establishedYear: '2020',
-    email: 'info@hares-niqaa.com',
+    email: 'info@silverocean.sa',
     phone: '+966 11 000 0000',
     badgeAr: 'شركة تابعة',
     badgeEn: 'Subsidiary',
 
     // Full Dynamic Fields
-    heroSubtitleAr: 'إحدى شركات مجموعة حارس ونقاء القابضة • إستقلالية تشغيلية كاملة',
-    heroSubtitleEn: 'A Subsidiary of Hares & Niqaa Holding Group • Complete Operational Autonomy',
+    heroSubtitleAr: `إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة • إستقلالية تشغيلية كاملة`,
+    heroSubtitleEn: `A Subsidiary of ${settings.logoTextEn || 'Silver Ocean'} Holding Group • Complete Operational Autonomy`,
     projectsLabelAr: 'مشروع مكتمل',
     projectsLabelEn: 'Completed Projects',
     clientsLabelAr: 'عميل استراتيجي',
@@ -141,8 +142,8 @@ export const SubsidiariesManager: React.FC = () => {
     quoteSubtitleAr: 'سيتم توجيه طلبك مباشرة للفريق الهندسي والتشغيلي لهذه الشركة للرد خلال أقل من ساعة.',
     quoteSubtitleEn: 'Your inquiry will be routed directly to this subsidiary operational leads.',
     websiteUrl: '',
-    footerNoteAr: 'إحدى شركات مجموعة حارس ونقاء القابضة',
-    footerNoteEn: 'A Subsidiary of Hares & Niqaa Holding Group',
+    footerNoteAr: `إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة`,
+    footerNoteEn: `A Subsidiary of ${settings.logoTextEn || 'Silver Ocean'} Holding Group`,
   };
 
   const [formData, setFormData] = useState<SubsidiaryCompany>(emptySub);
@@ -316,10 +317,10 @@ export const SubsidiariesManager: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-950 dark:text-white font-arabic">
+          <h2 className="text-2xl font-black text-black dark:text-white font-arabic">
             {lang === 'ar' ? 'إدارة الشركات التابعة والتصنيفات (Subsidiaries & Categories Manager)' : 'Subsidiaries & Categories Manager'}
           </h2>
-          <p className="text-xs text-slate-700 dark:text-slate-400 mt-1">
+          <p className="text-xs text-slate-800 dark:text-slate-400 mt-1">
             {lang === 'ar'
               ? 'إدارة شاملة وديناميكية بنسبة 100%: كل كلمة وصورة وبيان يظهر في صفحة الشركة التابعة يتم إدخاله وتعديله من هنا.'
               : '100% Dynamic Management: Every text, metric, service, certification, image, and label on the subsidiary page is managed here.'}
@@ -329,9 +330,9 @@ export const SubsidiariesManager: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowCatModal(!showCatModal)}
-            className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200 hover:text-[#C9A961] dark:hover:text-[#C9A961] font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-black dark:border-slate-700 text-black dark:text-slate-200 hover:text-[#C9A961] dark:hover:text-[#C9A961] font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
           >
-            <Tag className="w-4 h-4 text-[#C9A961]" />
+            <Tag className="w-4 h-4 text-black dark:text-[#C9A961]" />
             <span>{lang === 'ar' ? 'إدارة تصنيفات الشركات' : 'Manage Categories'}</span>
           </button>
 
@@ -509,7 +510,7 @@ export const SubsidiariesManager: React.FC = () => {
                     value={formData.heroSubtitleAr || ''}
                     onChange={(e) => setFormData({ ...formData, heroSubtitleAr: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-950 dark:text-white placeholder:text-slate-500 focus:border-[#C9A961] focus:outline-none"
-                    placeholder="إحدى شركات مجموعة حارس ونقاء القابضة • إستقلالية تشغيلية كاملة"
+                    placeholder={`إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة • إستقلالية تشغيلية كاملة`}
                   />
                 </div>
 
@@ -522,7 +523,7 @@ export const SubsidiariesManager: React.FC = () => {
                     value={formData.heroSubtitleEn || ''}
                     onChange={(e) => setFormData({ ...formData, heroSubtitleEn: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-950 dark:text-white placeholder:text-slate-500 focus:border-[#C9A961] focus:outline-none"
-                    placeholder="A Subsidiary of Hares & Niqaa Holding Group • Complete Operational Autonomy"
+                    placeholder={`A Subsidiary of ${settings.logoTextEn || 'Silver Ocean'} Holding Group • Complete Operational Autonomy`}
                   />
                 </div>
 
@@ -1265,7 +1266,7 @@ export const SubsidiariesManager: React.FC = () => {
                     value={formData.email || ''}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-950 dark:text-white"
-                    placeholder="company@hares-niqaa.com"
+                    placeholder="company@silverocean.sa"
                     dir="ltr"
                   />
                 </div>
@@ -1299,7 +1300,7 @@ export const SubsidiariesManager: React.FC = () => {
                     value={formData.websiteUrl || ''}
                     onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-950 dark:text-white"
-                    placeholder="https://subsidiary.hares-niqaa.com"
+                    placeholder="https://subsidiary.silverocean.sa"
                     dir="ltr"
                   />
                 </div>
@@ -1311,7 +1312,7 @@ export const SubsidiariesManager: React.FC = () => {
                     value={formData.footerNoteAr || ''}
                     onChange={(e) => setFormData({ ...formData, footerNoteAr: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-950 dark:text-white"
-                    placeholder="إحدى شركات مجموعة حارس ونقاء القابضة"
+                    placeholder={`إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة`}
                   />
                 </div>
               </div>

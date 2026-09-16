@@ -15,6 +15,7 @@ export const PartnersManager: React.FC = () => {
     addTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    settings,
   } = useApp();
 
   const [activeSubTab, setActiveSubTab] = useState<'logos' | 'testimonials'>('logos');
@@ -156,7 +157,7 @@ export const PartnersManager: React.FC = () => {
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {lang === 'ar'
-              ? 'إدارة قائمة شعارات الشركات والمؤسسات الكبرى التي تثق بحارس ونقاء بالإضافة لآراء وتقييمات العملاء.'
+              ? `إدارة قائمة شعارات الشركات والمؤسسات الكبرى التي تثق بـ ${settings.logoTextAr || 'المحيط الفضي'} بالإضافة لآراء وتقييمات العملاء.`
               : 'Manage partner logos, corporate clients, and client testimonials featured across the site.'}
           </p>
         </div>

@@ -8,10 +8,11 @@ export const WhatsAppFloatingButton: React.FC = () => {
   const rawNumber = settings.whatsappNumber || settings.phone || '966555555555';
   const cleanNumber = rawNumber.replace(/[^0-9]/g, '');
 
+  const companyName = lang === 'ar' ? (settings.companyNameAr || 'شركة المحيط الفضي') : (settings.companyNameEn || 'Silver Ocean');
   const defaultMsg =
     lang === 'ar'
-      ? 'السلام عليكم، أود الاستفسار عن خدمات شركة حارس ونقاء للخدمات الأمنية والنظافة.'
-      : 'Hello, I would like to inquire about Hares & Niqaa security & sanitation services.';
+      ? `السلام عليكم، أود الاستفسار عن خدمات ${companyName}.`
+      : `Hello, I would like to inquire about ${companyName} security & sanitation services.`;
 
   const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(defaultMsg)}`;
 

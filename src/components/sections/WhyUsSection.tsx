@@ -19,7 +19,7 @@ const iconMap: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export const WhyUsSection: React.FC = () => {
-  const { lang, theme, whyUsFeatures } = useApp();
+  const { lang, theme, whyUsFeatures, settings } = useApp();
 
   return (
     <section id="why-us" className="py-24 relative bg-slate-50 dark:bg-[#0B1929] transition-colors overflow-hidden theme-whyus-bg">
@@ -29,7 +29,7 @@ export const WhyUsSection: React.FC = () => {
 
       <div className="max-w-7xl 2xl:max-w-[1650px] 3xl:max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         <SectionHeading
-          badge={lang === 'ar' ? 'لماذا تختار حارس ونقاء' : 'Why Choose Us'}
+          badge={lang === 'ar' ? `لماذا تختار ${settings.logoTextAr || 'المحيط الفضي'}` : `Why Choose ${settings.logoTextEn || 'Silver Ocean'}`}
           badgeIcon={Award}
           title={lang === 'ar' ? 'المعايير التي تجعلنا الخيار الأول للمنشآت الكبرى' : 'The Pillars That Make Us The Industry Leader'}
           subtitle={

@@ -27,6 +27,7 @@ import {
   LogOut,
   ExternalLink,
   ChevronLeft,
+  SlidersHorizontal,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -45,6 +46,7 @@ export interface AdminDashboardProps {
   onNavigateTab?: (
     tab:
       | 'dashboard'
+      | 'slider'
       | 'subsidiaries'
       | 'categories'
       | 'whyUs'
@@ -397,6 +399,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTab })
             ) : (
               <span className="text-[10px] text-slate-400 font-mono shrink-0">{totalApplications}</span>
             )}
+          </button>
+
+          {/* Slider Shortcut */}
+          <button
+            type="button"
+            id="shortcut-slider"
+            onClick={() => onNavigateTab && onNavigateTab('slider')}
+            className="flex items-center justify-between gap-1.5 px-2.5 py-1.5 sm:py-2 rounded-xl bg-white dark:bg-[#112236] border border-slate-200 dark:border-slate-800 hover:border-[#C9A961] dark:hover:border-[#C9A961]/70 hover:shadow-xs transition-all cursor-pointer group text-start"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-6 h-6 rounded-lg bg-[#C9A961]/15 text-[#C9A961] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                {lang === 'ar' ? 'السلايدر' : 'Slider'}
+              </span>
+            </div>
+            <span className="text-[10px] text-[#C9A961] font-mono shrink-0">★</span>
           </button>
 
           {/* 4. Subsidiaries */}

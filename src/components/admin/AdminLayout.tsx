@@ -14,6 +14,7 @@ import { SettingsManager } from './SettingsManager';
 import { WhyUsManager } from './WhyUsManager';
 import { PartnersManager } from './PartnersManager';
 import { TeamManager } from './TeamManager';
+import { HeroSliderManager } from './HeroSliderManager';
 import {
   LayoutDashboard,
   Upload,
@@ -38,10 +39,11 @@ import {
   ExternalLink,
   LogOut,
   ChevronLeft,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
-  const { lang, setLang, quotes, inquiries, jobApplications, theme, toggleTheme, logoutAdmin } = useApp();
+  const { lang, setLang, quotes, inquiries, jobApplications, theme, toggleTheme, logoutAdmin, settings } = useApp();
 
   const navigateToHome = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,6 +59,7 @@ export const AdminLayout: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<
     | 'dashboard'
+    | 'slider'
     | 'subsidiaries'
     | 'categories'
     | 'whyUs'
@@ -84,6 +87,13 @@ export const AdminLayout: React.FC = () => {
       icon: LayoutDashboard,
     },
     {
+      id: 'slider',
+      labelAr: 'سلايدر الواجهة الرئيسية',
+      labelEn: 'Hero Slider & Images',
+      icon: SlidersHorizontal,
+      badge: lang === 'ar' ? 'السلايدر' : 'Slider',
+    },
+    {
       id: 'subsidiaries',
       labelAr: 'شركات المجموعة واللوجوهات',
       labelEn: 'Subsidiaries & Logos',
@@ -99,7 +109,7 @@ export const AdminLayout: React.FC = () => {
     },
     {
       id: 'whyUs',
-      labelAr: 'لماذا نحن (معايير حارس ونقاء)',
+      labelAr: `لماذا نحن (معايير ${settings.logoTextAr || 'المحيط الفضي'})`,
       labelEn: 'Why Choose Us Pillars',
       icon: Award,
     },
@@ -204,6 +214,15 @@ export const AdminLayout: React.FC = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
+              const isSubsOrCat = item.id === 'subsidiaries' || item.id === 'categories';
+
+              let buttonClass = 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/80';
+              if (isActive) {
+                buttonClass = 'gold-gradient-bg text-[#0B1929] shadow-lg shadow-[#C9A961]/20 font-extrabold';
+              } else if (isSubsOrCat) {
+                // In daylight mode, styled strongly in black as requested
+                buttonClass = 'text-black dark:text-slate-200 font-black bg-slate-100 hover:bg-slate-200/90 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800 shadow-2xs';
+              }
 
               return (
                 <button
@@ -212,14 +231,10 @@ export const AdminLayout: React.FC = () => {
                     setActiveTab(item.id as any);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full p-3 rounded-2xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                    isActive
-                      ? 'gold-gradient-bg text-[#0B1929] shadow-lg shadow-[#C9A961]/20 font-extrabold'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/80'
-                  }`}
+                  className={`w-full p-3 rounded-2xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${buttonClass}`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#0B1929]' : 'text-[#C9A961]'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#0B1929]' : isSubsOrCat ? 'text-black dark:text-[#C9A961]' : 'text-[#C9A961]'}`} />
                     <span>{lang === 'ar' ? item.labelAr : item.labelEn}</span>
                   </div>
 
@@ -314,6 +329,7 @@ export const AdminLayout: React.FC = () => {
         )}
 
         {activeTab === 'dashboard' && <AdminDashboard onNavigateTab={setActiveTab} />}
+        {activeTab === 'slider' && <HeroSliderManager />}
         {activeTab === 'subsidiaries' && <SubsidiariesManager />}
         {activeTab === 'categories' && <CategoriesManager />}
         {activeTab === 'whyUs' && <WhyUsManager />}

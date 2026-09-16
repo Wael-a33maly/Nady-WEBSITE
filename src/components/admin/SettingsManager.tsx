@@ -31,6 +31,8 @@ export const SettingsManager: React.FC = () => {
 
   const [companyNameAr, setCompanyNameAr] = useState(settings.companyNameAr);
   const [companyNameEn, setCompanyNameEn] = useState(settings.companyNameEn);
+  const [logoTextAr, setLogoTextAr] = useState(settings.logoTextAr || 'المحيط الفضي');
+  const [logoTextEn, setLogoTextEn] = useState(settings.logoTextEn || 'SILVER OCEAN');
   const [phone, setPhone] = useState(settings.phone);
   const [phoneSecondary, setPhoneSecondary] = useState(settings.phoneSecondary || '');
   const [email, setEmail] = useState(settings.email);
@@ -169,6 +171,8 @@ export const SettingsManager: React.FC = () => {
     updateSettings({
       companyNameAr,
       companyNameEn,
+      logoTextAr,
+      logoTextEn,
       phone,
       phoneSecondary,
       email,
@@ -816,7 +820,36 @@ export const SettingsManager: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-700 dark:text-slate-300">{lang === 'ar' ? 'اسم الشركة بالعربية' : 'Arabic Name'}</label>
+              <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>{lang === 'ar' ? 'اسم التطبيق والشعار بالعربية (Brand Name)' : 'App / Brand Name (Arabic)'}</span>
+                <span className="text-[10px] text-[#C9A961] font-mono">{lang === 'ar' ? 'يظهر في الهيدر والفوتر' : 'Header & Footer'}</span>
+              </label>
+              <input
+                type="text"
+                value={logoTextAr}
+                onChange={(e) => setLogoTextAr(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:border-[#C9A961] focus:outline-none font-bold"
+                placeholder={lang === 'ar' ? 'مثال: المحيط الفضي' : 'e.g. المحيط الفضي'}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>{lang === 'ar' ? 'اسم التطبيق والشعار بالإنجليزية (Brand Name)' : 'App / Brand Name (English)'}</span>
+                <span className="text-[10px] text-[#C9A961] font-mono">{lang === 'ar' ? 'يظهر في الهيدر والفوتر' : 'Header & Footer'}</span>
+              </label>
+              <input
+                type="text"
+                value={logoTextEn}
+                onChange={(e) => setLogoTextEn(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 focus:border-[#C9A961] focus:outline-none font-bold"
+                placeholder="e.g. SILVER OCEAN"
+                dir="ltr"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="font-semibold text-slate-700 dark:text-slate-300">{lang === 'ar' ? 'اسم الشركة الرسمي بالعربية (Full Legal Name)' : 'Full Legal Company Name (Arabic)'}</label>
               <input
                 type="text"
                 value={companyNameAr}
@@ -826,7 +859,7 @@ export const SettingsManager: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-700 dark:text-slate-300">{lang === 'ar' ? 'اسم الشركة بالإنجليزية' : 'English Name'}</label>
+              <label className="font-semibold text-slate-700 dark:text-slate-300">{lang === 'ar' ? 'اسم الشركة الرسمي بالإنجليزية (Full Legal Name)' : 'Full Legal Company Name (English)'}</label>
               <input
                 type="text"
                 value={companyNameEn}

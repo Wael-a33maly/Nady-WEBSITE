@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { ImageUploadInput } from '../common/ImageUploadInput';
 
 export const JobApplyModal: React.FC = () => {
-  const { lang, isCareerModalOpen, setIsCareerModalOpen, selectedJobForApply, addJobApplication } = useApp();
+  const { lang, isCareerModalOpen, setIsCareerModalOpen, selectedJobForApply, addJobApplication, settings } = useApp();
 
   const [applicantName, setApplicantName] = useState('');
   const [email, setEmail] = useState('');
@@ -68,8 +68,8 @@ export const JobApplyModal: React.FC = () => {
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
               {lang === 'ar'
-                ? 'شكراً لاهتمامك بالانضمام لمنظومة حارس ونقاء. سيقوم فريق الموارد البشرية بمراجعة ملفك والاتصال بك قريباً.'
-                : 'Thank you for applying. Our HR team will review your CV and contact you shortly.'}
+                ? `شكراً لاهتمامك بالانضمام لمنظومة ${settings.logoTextAr || 'المحيط الفضي'}. سيقوم فريق الموارد البشرية بمراجعة ملفك والاتصال بك قريباً.`
+                : `Thank you for applying to ${settings.logoTextEn || 'Silver Ocean'}. Our HR team will review your CV and contact you shortly.`}
             </p>
             <button
               onClick={handleClose}
@@ -87,7 +87,7 @@ export const JobApplyModal: React.FC = () => {
               </div>
 
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-                {lang === 'ar' ? 'قدّم طلب انضمام إلى فريق حارس ونقاء' : 'Apply for Career Opportunity'}
+                {lang === 'ar' ? `قدّم طلب انضمام إلى فريق ${settings.logoTextAr || 'المحيط الفضي'}` : `Apply for Career Opportunity at ${settings.logoTextEn || 'Silver Ocean'}`}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {lang === 'ar'

@@ -6,7 +6,7 @@ import { Star, Quote, ChevronRight, ChevronLeft, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const ClientsMarqueeSection: React.FC = () => {
-  const { lang, testimonials, clientLogos } = useApp();
+  const { lang, testimonials, clientLogos, settings } = useApp();
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
 
   const prevTestimonial = () => {
@@ -27,7 +27,7 @@ export const ClientsMarqueeSection: React.FC = () => {
         <SectionHeading
           badge={lang === 'ar' ? 'شركاء النجاح' : 'Our Trusted Partners'}
           badgeIcon={Shield}
-          title={lang === 'ar' ? 'شركات وهبات كبرى تثق بحارس ونقاء' : 'Endorsed by Top Industry Organizations'}
+          title={lang === 'ar' ? `شركات وهيئات كبرى تثق بـ ${settings.logoTextAr || 'المحيط الفضي'}` : 'Endorsed by Top Industry Organizations'}
           subtitle={
             lang === 'ar'
               ? 'نفخر بتقديم خدماتنا الميدانية والاستشارية لكبرى العلامات التجارية والمؤسسات الحكومية والخاصة.'

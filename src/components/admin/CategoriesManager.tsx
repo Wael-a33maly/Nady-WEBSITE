@@ -76,7 +76,7 @@ export const CategoriesManager: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             <span>{lang === 'ar' ? 'محتوى ديناميكي متطور' : 'Dynamic Content Engine'}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-arabic">
+          <h2 className="text-2xl sm:text-3xl font-black text-black dark:text-white font-arabic">
             {lang === 'ar' ? 'إدارة تصنيفات الشركات الديناميكية (Dynamic Categories Manager)' : 'Dynamic Categories Manager'}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">

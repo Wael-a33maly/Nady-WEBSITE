@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { SectionHeading } from '../ui/SectionHeading';
 
 export const CareersSection: React.FC = () => {
-  const { lang, jobPositions, openCareerModalWithJob, setIsCareersPageOpen } = useApp();
+  const { lang, jobPositions, openCareerModalWithJob, setIsCareersPageOpen, settings } = useApp();
 
   const activeJobs = jobPositions.filter((j) => j.active);
 
@@ -17,7 +17,7 @@ export const CareersSection: React.FC = () => {
         <SectionHeading
           badge={lang === 'ar' ? 'الفرص الوظيفية والانضمام' : 'Careers & Opportunities'}
           badgeIcon={Briefcase}
-          title={lang === 'ar' ? 'انضم إلى فريق النخبة في حارس ونقاء' : 'Join the Elite Team at Hares & Niqaa'}
+          title={lang === 'ar' ? `انضم إلى فريق النخبة في ${settings.logoTextAr || 'المحيط الفضي'}` : `Join the Elite Team at ${settings.logoTextEn || 'Silver Ocean'}`}
           subtitle={
             lang === 'ar'
               ? 'نبحث دائماً عن الكفاءات الميدانية والفنية المتميزة للانضمام لأسطولنا وتطوير مسارهم المهني في بيئة عمل محفزة.'

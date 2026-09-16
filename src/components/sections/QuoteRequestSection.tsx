@@ -29,7 +29,7 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
   isModal = false,
   onClose,
 }) => {
-  const { lang, addQuote, preselectedQuoteCategory } = useApp();
+  const { lang, addQuote, preselectedQuoteCategory, settings } = useApp();
 
   const [step, setStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -183,8 +183,8 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
 
                 <p className="text-sm sm:text-base text-slate-300 max-w-md mx-auto leading-relaxed">
                   {lang === 'ar'
-                    ? 'شكراً لاهتمامك بشركة حارس ونقاء. تم تحويل الطلب إلى قسم العمليات وستصلك دراسة السعر خلال أقل من 24 ساعة.'
-                    : 'Thank you for choosing Hares & Niqaa. Our operations team will review your scope and issue a proposal within 24 hours.'}
+                    ? `شكراً لاهتمامك بشركة ${settings.logoTextAr || 'المحيط الفضي'}. تم تحويل الطلب إلى قسم العمليات وستصلك دراسة السعر خلال أقل من 24 ساعة.`
+                    : `Thank you for choosing ${settings.logoTextEn || 'Silver Ocean'}. Our operations team will review your scope and issue a proposal within 24 hours.`}
                 </p>
 
                 <div className="pt-4 flex items-center justify-center gap-4">

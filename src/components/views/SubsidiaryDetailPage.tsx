@@ -30,7 +30,7 @@ interface Props {
 }
 
 export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsidiary, onBack }) => {
-  const { lang, openQuoteWithCategory, addQuote, subsidiaries } = useApp();
+  const { lang, openQuoteWithCategory, addQuote, subsidiaries, settings } = useApp();
   const subsidiary = subsidiaries.find((s) => s.id === initialSubsidiary.id) || initialSubsidiary;
 
   const [activeTab, setActiveTab] = useState<'overview' | 'services' | 'certifications' | 'gallery' | 'contact'>('overview');
@@ -65,8 +65,8 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
   };
 
   const heroSubtitle = lang === 'ar'
-    ? (subsidiary.heroSubtitleAr || 'إحدى شركات مجموعة حارس ونقاء القابضة • إستقلالية تشغيلية كاملة')
-    : (subsidiary.heroSubtitleEn || 'A Subsidiary of Hares & Niqaa Holding Group • Complete Operational Autonomy');
+    ? (subsidiary.heroSubtitleAr || `إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة • إستقلالية تشغيلية كاملة`)
+    : (subsidiary.heroSubtitleEn || `A Subsidiary of ${settings.logoTextEn || 'Silver Ocean'} Holding Group • Complete Operational Autonomy`);
 
   const projectsLabel = lang === 'ar'
     ? (subsidiary.projectsLabelAr || 'مشروع مكتمل')
@@ -138,8 +138,8 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
     : (subsidiary.quoteSubtitleEn || 'Your inquiry will be routed directly to this subsidiary operational leads.');
 
   const footerNote = lang === 'ar'
-    ? (subsidiary.footerNoteAr || `${subsidiary.nameAr} • إحدى شركات مجموعة حارس ونقاء القابضة`)
-    : (subsidiary.footerNoteEn || `${subsidiary.nameEn} • A Subsidiary of Hares & Niqaa Holding Group`);
+    ? (subsidiary.footerNoteAr || `${subsidiary.nameAr} • إحدى شركات مجموعة ${settings.logoTextAr || 'المحيط الفضي'} القابضة`)
+    : (subsidiary.footerNoteEn || `${subsidiary.nameEn} • A Subsidiary of ${settings.logoTextEn || 'Silver Ocean'} Holding Group`);
 
   const currentServices = lang === 'ar' ? subsidiary.servicesAr : subsidiary.servicesEn;
   const currentDetailedServices = subsidiary.detailedServices && subsidiary.detailedServices.length > 0

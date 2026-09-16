@@ -15,11 +15,37 @@ import {
 } from 'lucide-react';
 import { initialHeroSlides } from '../../data/initialData';
 
-export const HeroSection: React.FC = () => {
-  const { lang, settings, openQuoteWithCategory } = useApp();
+const FALLBACK_SLIDE_IMAGES = [
+  'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=80',
+];
 
-  const slides = settings.heroSlides && settings.heroSlides.length > 0 ? settings.heroSlides : initialHeroSlides;
+export const HeroSection: React.FC = () => {
+  const { lang, settings, heroSlides, openQuoteWithCategory } = useApp();
+
+  const allSlides = heroSlides && heroSlides.length > 0 ? heroSlides : (settings.heroSlides && settings.heroSlides.length > 0 ? settings.heroSlides : initialHeroSlides);
+  const activeSlides = allSlides.filter((s) => s.active !== false);
+  const slides = activeSlides.length > 0 ? activeSlides : allSlides;
+
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentSlideIndex >= slides.length) {
+      setCurrentSlideIndex(0);
+    }
+  }, [slides.length, currentSlideIndex]);
+
+  // Preload all slide images to prevent blank screens or stutter during transitions
+  useEffect(() => {
+    slides.forEach((s, idx) => {
+      const src = s.image || FALLBACK_SLIDE_IMAGES[idx % FALLBACK_SLIDE_IMAGES.length];
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
+    });
+  }, [slides]);
 
   // Auto-play slider every 6 seconds
   useEffect(() => {
@@ -83,9 +109,18 @@ export const HeroSection: React.FC = () => {
           className="absolute inset-0 pointer-events-none z-0"
         >
           <img
-            src={currentSlide.image}
+            src={
+              currentSlide.image && !currentSlide.image.includes('photo-1541888946425-d0fbb186a5b3')
+                ? currentSlide.image
+                : FALLBACK_SLIDE_IMAGES[currentSlideIndex % FALLBACK_SLIDE_IMAGES.length]
+            }
             alt="Hero Background Slide"
             className="w-full h-full object-cover opacity-25 dark:opacity-20 filter brightness-90"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src =
+                FALLBACK_SLIDE_IMAGES[currentSlideIndex % FALLBACK_SLIDE_IMAGES.length];
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B1929] via-[#0B1929]/80 to-[#0B1929]/50" />
         </motion.div>
@@ -186,12 +221,21 @@ export const HeroSection: React.FC = () => {
                   className="relative h-[380px] sm:h-[460px] lg:h-[500px] xl:h-[540px] w-full overflow-hidden"
                 >
                   <motion.img
-                    src={currentSlide.image}
+                    src={
+                      currentSlide.image && !currentSlide.image.includes('photo-1541888946425-d0fbb186a5b3')
+                        ? currentSlide.image
+                        : FALLBACK_SLIDE_IMAGES[currentSlideIndex % FALLBACK_SLIDE_IMAGES.length]
+                    }
                     alt={currentSlide.titleAr}
                     className="w-full h-full object-cover"
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 6, ease: 'linear' }}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        FALLBACK_SLIDE_IMAGES[currentSlideIndex % FALLBACK_SLIDE_IMAGES.length];
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0B1929] via-[#0B1929]/20 to-transparent" />
 
@@ -251,6 +295,30 @@ export const HeroSection: React.FC = () => {
                   />
                 ))}
               </div>
+            </div>
+
+            {/* Quick Slide Navigation Pills */}
+            <div className="mt-3 flex items-center justify-center gap-2 overflow-x-auto py-1 no-scrollbar">
+              {slides.map((slide, idx) => {
+                const isActive = idx === currentSlideIndex;
+                return (
+                  <button
+                    key={slide.id || idx}
+                    type="button"
+                    onClick={() => setCurrentSlideIndex(idx)}
+                    className={`px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border shrink-0 ${
+                      isActive
+                        ? 'bg-[#112236] text-[#C9A961] border-[#C9A961] shadow-md'
+                        : 'bg-[#0B1929]/70 text-slate-400 hover:text-white border-slate-700/60 hover:bg-[#112236]'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#C9A961]' : 'bg-slate-500'}`} />
+                    <span className="truncate max-w-[140px] sm:max-w-[200px]">
+                      {lang === 'ar' ? slide.badgeAr || slide.titleAr : slide.badgeEn || slide.titleEn}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

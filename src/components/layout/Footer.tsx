@@ -44,8 +44,8 @@ export const Footer: React.FC = () => {
               <BrandLogo />
               <p className="text-xs text-slate-400 leading-relaxed max-w-sm font-arabic">
                 {lang === 'ar'
-                  ? 'شركة حارس ونقاء - حلول أمن ونظافة متكاملة تحت سقف واحد بكوادر مؤهلة معتمدة وأحدث التقنيات الذكية معتمدة ISO.'
-                  : 'Hares & Niqaa Co. - Integrated guarding & commercial sanitation engineered for modern enterprises.'}
+                  ? `شركة ${settings.logoTextAr || 'المحيط الفضي'} - حلول أمن ونظافة متكاملة تحت سقف واحد بكوادر مؤهلة معتمدة وأحدث التقنيات الذكية معتمدة ISO.`
+                  : `${settings.logoTextEn || 'Silver Ocean'} Co. - Integrated guarding & commercial sanitation engineered for modern enterprises.`}
               </p>
 
               {/* Social Links */}

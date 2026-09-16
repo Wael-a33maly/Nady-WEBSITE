@@ -40,14 +40,14 @@ export const LogoManager: React.FC = () => {
 
   const handleResetToDefault = () => {
     setCustomLogoUrl('');
-    setLogoTextAr('حارس ونقاء');
-    setLogoTextEn('HARES & NIQAA');
+    setLogoTextAr('المحيط الفضي');
+    setLogoTextEn('SILVER OCEAN');
     setSloganAr('أمن ونظافة متكاملة');
     setSloganEn('Integrated Security & Hygiene');
     updateSettings({
       logoUrl: '',
-      logoTextAr: 'حارس ونقاء',
-      logoTextEn: 'HARES & NIQAA',
+      logoTextAr: 'المحيط الفضي',
+      logoTextEn: 'SILVER OCEAN',
       sloganAr: 'أمن ونظافة متكاملة',
       sloganEn: 'Integrated Security & Hygiene',
     });

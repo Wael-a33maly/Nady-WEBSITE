@@ -9,7 +9,7 @@ interface CareersPageProps {
 }
 
 export const CareersPage: React.FC<CareersPageProps> = ({ onBack }) => {
-  const { lang, jobPositions, openCareerModalWithJob, theme } = useApp();
+  const { lang, jobPositions, openCareerModalWithJob, theme, settings } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDept, setSelectedDept] = useState<string>('all');
 
@@ -55,7 +55,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({ onBack }) => {
         <div className="max-w-7xl 2xl:max-w-[1650px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#112236] border border-[#C9A961]/40 text-[#C9A961] text-xs font-bold shadow-lg">
             <Briefcase className="w-4 h-4" />
-            <span>{lang === 'ar' ? 'البوابة الوطنية للتوظيف - حارس ونقاء' : 'Careers & Recruitment Portal'}</span>
+            <span>{lang === 'ar' ? `البوابة الوطنية للتوظيف - ${settings.logoTextAr || 'المحيط الفضي'}` : `Careers & Recruitment Portal - ${settings.logoTextEn || 'Silver Ocean'}`}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-arabic gold-gradient-text max-w-4xl mx-auto leading-tight">

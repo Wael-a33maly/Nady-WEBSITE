@@ -217,6 +217,14 @@ export interface HeroSlide {
   subtitleEn: string;
   badgeAr?: string;
   badgeEn?: string;
+  active?: boolean;
+  primaryBtnTextAr?: string;
+  primaryBtnTextEn?: string;
+  primaryBtnLink?: string;
+  secondaryBtnTextAr?: string;
+  secondaryBtnTextEn?: string;
+  secondaryBtnLink?: string;
+  order?: number;
 }
 
 export interface JobPosition {

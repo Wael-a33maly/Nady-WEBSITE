@@ -16,9 +16,11 @@ import {
   JobApplication,
   WhyUsFeature,
   ClientLogo,
+  HeroSlide,
 } from '../types';
 import {
   initialSiteSettings,
+  initialHeroSlides,
   initialServices,
   initialProjects,
   initialTeam,
@@ -93,6 +95,14 @@ interface AppContextType {
   settings: SiteSettings;
   updateSettings: (newSettings: Partial<SiteSettings>) => void;
   changeColorPreset: (preset: ColorPreset, hex: string) => void;
+
+  // Hero Slider
+  heroSlides: HeroSlide[];
+  addHeroSlide: (slide: HeroSlide) => void;
+  updateHeroSlide: (id: string, updates: Partial<HeroSlide>) => void;
+  deleteHeroSlide: (id: string) => void;
+  toggleHeroSlideActive: (id: string) => void;
+  reorderHeroSlides: (slides: HeroSlide[]) => void;
 
   subsidiaryCategories: SubsidiaryCategory[];
   addSubsidiaryCategory: (cat: SubsidiaryCategory) => void;
@@ -219,6 +229,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [settings, setSettings] = useState<SiteSettings>(() => {
     const savedSettings = safeParseLocalStorage<Partial<SiteSettings>>('hn_settings', {});
+    // Auto-migrate legacy default name to 'المحيط الفضي' if not customized by user
+    if (savedSettings.logoTextAr === 'حارس ونقاء') {
+      savedSettings.logoTextAr = 'المحيط الفضي';
+    }
+    if (savedSettings.logoTextEn === 'HARES & NIQAA') {
+      savedSettings.logoTextEn = 'SILVER OCEAN';
+    }
+    if (savedSettings.companyNameAr === 'شركة حارس ونقاء للخدمات الأمنية والنظافة') {
+      savedSettings.companyNameAr = 'شركة المحيط الفضي للخدمات الأمنية والنظافة';
+    }
+    if (savedSettings.companyNameEn === 'Hares & Niqaa Security & Cleaning Co.') {
+      savedSettings.companyNameEn = 'Silver Ocean Security & Cleaning Co.';
+    }
+    // Auto-fix broken legacy slide image URLs and normalize active status
+    if (savedSettings.heroSlides && Array.isArray(savedSettings.heroSlides)) {
+      savedSettings.heroSlides = savedSettings.heroSlides.map((slide) => {
+        let img = slide.image;
+        if (img && (img.includes('photo-1541888946425-d0fbb186a5b3') || img.includes('photo-1541888946425-d0fbb186a5b7'))) {
+          img = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1600&q=80';
+        }
+        return {
+          ...slide,
+          image: img,
+          active: slide.active !== false,
+        };
+      });
+    }
     return { ...initialSiteSettings, ...savedSettings };
   });
 
@@ -227,7 +264,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [subsidiaries, setSubsidiaries] = useState<SubsidiaryCompany[]>(() => {
-    return safeParseLocalStorage('hn_subsidiaries', initialSubsidiaries);
+    const loaded = safeParseLocalStorage<SubsidiaryCompany[]>('hn_subsidiaries', initialSubsidiaries);
+    return loaded.map((sub) => ({
+      ...sub,
+      galleryImages: (sub.galleryImages || []).map((img) =>
+        img.includes('photo-1541888946425-d0fbb186a5b7') || img.includes('photo-1541888946425-d0fbb186a5b3')
+          ? 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80'
+          : img
+      ),
+    }));
   });
 
   const [whyUsFeatures, setWhyUsFeatures] = useState<WhyUsFeature[]>(() => {
@@ -239,7 +284,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [projects, setProjects] = useState<ProjectItem[]>(() => {
-    return safeParseLocalStorage('hn_projects', initialProjects);
+    const loaded = safeParseLocalStorage<ProjectItem[]>('hn_projects', initialProjects);
+    return loaded.map((p) => ({
+      ...p,
+      image:
+        p.image && (p.image.includes('photo-1541888946425-d0fbb186a5b3') || p.image.includes('photo-1541888946425-d0fbb186a5b7'))
+          ? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80'
+          : p.image,
+    }));
   });
 
   const [team, setTeam] = useState<TeamMember[]>(() => {
@@ -509,6 +561,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  // Hero Slider Management
+  const heroSlides = (settings.heroSlides && settings.heroSlides.length > 0 ? settings.heroSlides : initialHeroSlides).map((s) => ({
+    ...s,
+    active: s.active !== false,
+  }));
+
+  const addHeroSlide = (slide: HeroSlide) => {
+    const newSlide: HeroSlide = {
+      ...slide,
+      id: slide.id || `slide-${Date.now()}`,
+      active: slide.active !== false,
+    };
+    const updated = [...heroSlides, newSlide];
+    updateSettings({ heroSlides: updated });
+  };
+
+  const updateHeroSlide = (id: string, updates: Partial<HeroSlide>) => {
+    const updated = heroSlides.map((s) => (s.id === id ? { ...s, ...updates } : s));
+    updateSettings({ heroSlides: updated });
+  };
+
+  const deleteHeroSlide = (id: string) => {
+    const updated = heroSlides.filter((s) => s.id !== id);
+    updateSettings({ heroSlides: updated });
+  };
+
+  const toggleHeroSlideActive = (id: string) => {
+    const updated = heroSlides.map((s) => (s.id === id ? { ...s, active: s.active === false ? true : false } : s));
+    updateSettings({ heroSlides: updated });
+  };
+
+  const reorderHeroSlides = (newSlides: HeroSlide[]) => {
+    updateSettings({ heroSlides: newSlides });
+  };
+
   const addSubsidiaryCategory = (cat: SubsidiaryCategory) => {
     setSubsidiaryCategories((prev) => [...prev, cat]);
     createSubsidiaryCategoryApi(cat).catch(() => {});
@@ -735,6 +822,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         settings,
         updateSettings,
         changeColorPreset,
+        heroSlides,
+        addHeroSlide,
+        updateHeroSlide,
+        deleteHeroSlide,
+        toggleHeroSlideActive,
+        reorderHeroSlides,
         subsidiaryCategories,
         addSubsidiaryCategory,
         updateSubsidiaryCategory,

@@ -1,5 +1,5 @@
 /**
- * API Service for Hares & Niqaa
+ * API Service for Silver Ocean (المحيط الفضي)
  * Connects React Frontend with Hostinger PHP/MySQL REST API
  */
 
