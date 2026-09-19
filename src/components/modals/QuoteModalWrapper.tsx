@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { QuoteRequestSection } from '../sections/QuoteRequestSection';
 
 export const QuoteModalWrapper: React.FC = () => {
-  const { isQuoteModalOpen, setIsQuoteModalOpen } = useApp();
+  const { lang, isQuoteModalOpen, setIsQuoteModalOpen } = useApp();
 
   if (!isQuoteModalOpen) return null;
 
@@ -20,7 +20,8 @@ export const QuoteModalWrapper: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsQuoteModalOpen(false)}
-          className="absolute top-4 right-4 rtl:right-4 ltr:left-4 z-20 p-2.5 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-[#C9A961] cursor-pointer"
+          className="absolute top-3 sm:top-4 rtl:left-3 sm:rtl:left-4 ltr:right-3 sm:ltr:right-4 z-20 p-2 sm:p-2.5 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-[#C9A961] cursor-pointer"
+          aria-label={lang === 'ar' ? 'إغلاق' : 'Close'}
         >
           <X className="w-5 h-5" />
         </button>

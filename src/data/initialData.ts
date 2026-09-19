@@ -1,4 +1,5 @@
 import { ServiceItem, ProjectItem, TeamMember, Testimonial, ClientLogo, QuoteRequest, ContactInquiry, SiteSettings, SubsidiaryCompany, HeroSlide, JobPosition, JobApplication, WhyUsFeature } from '../types';
+import { clientVectorLogos } from './clientLogosData';
 
 export const initialWhyUsFeatures: WhyUsFeature[] = [
   {
@@ -131,6 +132,7 @@ export const initialSiteSettings: SiteSettings = {
   cardBorderDark: '#1E3A5F',
   cardBorderLight: '#E2E8F0',
   cardRadiusPx: 16,
+  clientDisplayMode: 'marquee',
   
   // Hero Section
   heroBadgeAr: 'الشركة الأولى المعتمدة للحراسات الأمنية والنظافة بالمملكة',
@@ -547,6 +549,7 @@ export const initialTeam: TeamMember[] = [
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
     bioAr: 'خبيرة معتمدة في بروتوكولات البيئة والجودة الشاملة ISO 9001 & ISO 14001 وتطوير الأساليب الصديقة للبيئة.',
     bioEn: 'Certified ISO lead auditor with expertise in green cleaning technologies and environmental compliance.',
+    phone: '+966 50 222 4455',
     email: 'sarah@silverocean.sa',
     linkedin: 'https://linkedin.com',
   },
@@ -559,6 +562,7 @@ export const initialTeam: TeamMember[] = [
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
     bioAr: 'يشرف على تدريب الحراس وصقل مهاراتهم في التعامل مع كبار الشخصيات والتدخل السريع وإدارة الحشود.',
     bioEn: 'Leads guard training academy, VIP close protection tactics, and emergency rapid response protocols.',
+    phone: '+966 50 333 6677',
     email: 'tarek@silverocean.sa',
     linkedin: 'https://linkedin.com',
   },
@@ -571,6 +575,7 @@ export const initialTeam: TeamMember[] = [
     image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80',
     bioAr: 'متخصص في دمج الذكاء الاصطناعي مع أنظمة المراقبة وغرف التحكم المباشر وتتبع الكاميرات الذكية.',
     bioEn: 'Specializes in AI surveillance integration, video telemetry, and central monitoring command units.',
+    phone: '+966 50 444 8899',
     email: 'khaled@silverocean.sa',
     linkedin: 'https://linkedin.com',
   },
@@ -622,12 +627,66 @@ export const initialTestimonials: Testimonial[] = [
 ];
 
 export const initialClientLogos: ClientLogo[] = [
-  { id: 'c1', name: 'Aramco Partners', logoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80', category: 'Energy' },
-  { id: 'c2', name: 'Riyadh Bank', logoUrl: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=200&q=80', category: 'Banking' },
-  { id: 'c3', name: 'SABIC Tower', logoUrl: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=200&q=80', category: 'Industrial' },
-  { id: 'c4', name: 'Kingdom Holding', logoUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=200&q=80', category: 'Real Estate' },
-  { id: 'c5', name: 'STC Solutions', logoUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=200&q=80', category: 'Telecom' },
-  { id: 'c6', name: 'Dr. Sulaiman Al Habib', logoUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=200&q=80', category: 'Healthcare' },
+  {
+    id: 'c1',
+    name: 'Aramco Partners',
+    nameAr: 'أرامكو السعودية - قطاع الطاقة',
+    nameEn: 'Saudi Aramco Energy Partners',
+    logoUrl: clientVectorLogos.aramco,
+    category: 'Energy',
+    categoryAr: 'قطاع الطاقة والنفط',
+    categoryEn: 'Energy & Infrastructure',
+  },
+  {
+    id: 'c2',
+    name: 'Riyadh Bank',
+    nameAr: 'بنك الرياض - المركز المالي',
+    nameEn: 'Riyad Bank Financial Center',
+    logoUrl: clientVectorLogos.riyadhBank,
+    category: 'Banking',
+    categoryAr: 'القطاع المالي والمصرفي',
+    categoryEn: 'Banking & Financial Services',
+  },
+  {
+    id: 'c3',
+    name: 'SABIC Tower',
+    nameAr: 'شركة سابك للصناعات الكبرى',
+    nameEn: 'SABIC Industrial Corporation',
+    logoUrl: clientVectorLogos.sabic,
+    category: 'Industrial',
+    categoryAr: 'الصناعات والبتروكيماويات',
+    categoryEn: 'Petrochemical & Heavy Industries',
+  },
+  {
+    id: 'c4',
+    name: 'Kingdom Holding',
+    nameAr: 'شركة المملكة القابضة',
+    nameEn: 'Kingdom Holding Company',
+    logoUrl: clientVectorLogos.kingdomHolding,
+    category: 'Real Estate',
+    categoryAr: 'التطوير العقاري والاستثماري',
+    categoryEn: 'Real Estate & Investment',
+  },
+  {
+    id: 'c5',
+    name: 'STC Solutions',
+    nameAr: 'إس تي سي للحلول الرقمية (stc)',
+    nameEn: 'stc Digital Solutions & Cloud',
+    logoUrl: clientVectorLogos.stc,
+    category: 'Telecom',
+    categoryAr: 'الاتصالات ومراكز البيانات',
+    categoryEn: 'Telecom & Tech Infrastructure',
+  },
+  {
+    id: 'c6',
+    name: 'Dr. Sulaiman Al Habib',
+    nameAr: 'مجموعة د. سليمان الحبيب الطبية',
+    nameEn: 'Dr. Sulaiman Al Habib Medical Group',
+    logoUrl: clientVectorLogos.alhabib,
+    category: 'Healthcare',
+    categoryAr: 'الرعاية الصحية والمستشفيات',
+    categoryEn: 'Healthcare & Clinical Services',
+  },
 ];
 
 export const initialQuotes: QuoteRequest[] = [

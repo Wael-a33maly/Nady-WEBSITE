@@ -174,22 +174,25 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Controls */}
-          <div className="flex lg:hidden items-center gap-2">
+          <div className="flex lg:hidden items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700"
+              className="p-2 sm:p-2.5 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 min-w-[38px] min-h-[38px] flex items-center justify-center cursor-pointer"
+              aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
             </button>
             <button
               onClick={toggleLang}
-              className="px-2.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-300 dark:border-slate-700"
+              className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-300 dark:border-slate-700 min-h-[38px] flex items-center justify-center cursor-pointer"
+              aria-label="Toggle language"
             >
               {lang === 'ar' ? 'EN' : 'عربي'}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-[#C9A961]/20 text-[#C9A961] border border-[#C9A961]/30 focus:outline-none cursor-pointer"
+              className="p-2 sm:p-2.5 rounded-xl bg-[#C9A961]/20 text-[#C9A961] border border-[#C9A961]/30 focus:outline-none cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center"
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -205,37 +208,43 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-4 top-20 z-30 bg-white/95 dark:bg-[#0B1929]/95 backdrop-blur-2xl border border-slate-200 dark:border-[#C9A961]/30 rounded-3xl lg:hidden shadow-2xl overflow-hidden"
+            className="fixed inset-x-3 sm:inset-x-4 top-16 sm:top-20 z-40 bg-white/98 dark:bg-[#0B1929]/98 backdrop-blur-2xl border border-slate-200 dark:border-[#C9A961]/30 rounded-3xl lg:hidden shadow-2xl overflow-hidden max-h-[calc(100vh-5.5rem)] flex flex-col"
           >
-            <div className="p-6 space-y-4">
-              <div className="flex flex-col space-y-1">
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto overscroll-contain">
+              <div className="flex flex-col space-y-0.5">
                 {navLinks.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-base font-black text-slate-900 dark:text-slate-100 hover:text-[#C9A961] dark:hover:text-[#C9A961] py-3 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between whitespace-nowrap"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      if (link.href === '#careers') {
+                        e.preventDefault();
+                        setIsCareersPageOpen(true);
+                      }
+                    }}
+                    className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 hover:text-[#C9A961] dark:hover:text-[#C9A961] py-2.5 sm:py-3 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between"
                   >
                     <span>{lang === 'ar' ? link.labelAr : link.labelEn}</span>
-                    <ArrowLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+                    <ArrowLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180 shrink-0" />
                   </a>
                 ))}
               </div>
 
-              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
                 <a
                   href={`mailto:${settings.email}`}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold"
                 >
-                  <Mail className="w-4 h-4 text-[#C9A961]" />
-                  <span>{settings.email}</span>
+                  <Mail className="w-4 h-4 text-[#C9A961] shrink-0" />
+                  <span className="truncate">{settings.email}</span>
                 </a>
 
                 <a
                   href={`tel:${settings.phone.replace(/\s+/g, '')}`}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold"
                 >
-                  <PhoneCall className="w-4 h-4 text-[#C9A961]" />
+                  <PhoneCall className="w-4 h-4 text-[#C9A961] shrink-0" />
                   <span dir="ltr">{settings.phone}</span>
                 </a>
 
@@ -244,9 +253,9 @@ export const Navbar: React.FC = () => {
                     setMobileMenuOpen(false);
                     openQuoteWithCategory('integrated');
                   }}
-                  className="w-full py-3 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm shadow-lg shadow-[#C9A961]/20 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+                  className="w-full py-3 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm shadow-lg shadow-[#C9A961]/20 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <FileText className="w-4 h-4" />
+                  <FileText className="w-4 h-4 shrink-0" />
                   <span>{lang === 'ar' ? 'اطلب عرض سعر مجاني' : 'Request Free Quote'}</span>
                 </button>
               </div>

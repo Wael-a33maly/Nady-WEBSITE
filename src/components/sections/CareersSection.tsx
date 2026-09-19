@@ -26,11 +26,11 @@ export const CareersSection: React.FC = () => {
         />
 
         {/* Jobs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mt-8 sm:mt-12 mb-8 sm:mb-12">
           {activeJobs.map((job) => (
             <div
               key={job.id}
-              className="bg-white dark:bg-[#0B1929] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-[#C9A961]/60 transition-all flex flex-col justify-between group space-y-4"
+              className="bg-white dark:bg-[#0B1929] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm hover:border-[#C9A961]/60 transition-all flex flex-col justify-between group space-y-4"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -40,7 +40,9 @@ export const CareersSection: React.FC = () => {
                   <span className="text-[10px] text-slate-400 font-mono">{job.postedDate}</span>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#C9A961] transition-colors">
+                <h3 className={`text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#C9A961] transition-colors break-words ${
+                  lang === 'ar' ? 'font-arabic' : 'font-sans'
+                }`}>
                   {lang === 'ar' ? job.titleAr : job.titleEn}
                 </h3>
 
@@ -50,11 +52,11 @@ export const CareersSection: React.FC = () => {
 
                 <div className="pt-2 space-y-1 text-xs text-slate-500 dark:text-slate-400">
                   <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#C9A961]" />
-                    <span>{lang === 'ar' ? job.locationAr : job.locationEn}</span>
+                    <MapPin className="w-3.5 h-3.5 text-[#C9A961] shrink-0" />
+                    <span className="truncate">{lang === 'ar' ? job.locationAr : job.locationEn}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#C9A961]" />
+                    <Clock className="w-3.5 h-3.5 text-[#C9A961] shrink-0" />
                     <span>{lang === 'ar' ? job.typeAr : job.typeEn}</span>
                   </div>
                 </div>
@@ -78,9 +80,9 @@ export const CareersSection: React.FC = () => {
                   onClick={() => openCareerModalWithJob(job)}
                   className="w-full py-3 px-4 rounded-xl bg-[#C9A961] hover:bg-[#b3914a] text-[#0B1929] font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlus className="w-4 h-4 shrink-0" />
                   <span>{lang === 'ar' ? 'قدّم على الوظيفة الآن' : 'Apply Now'}</span>
-                  {lang === 'ar' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                  {lang === 'ar' ? <ArrowLeft className="w-3.5 h-3.5 shrink-0" /> : <ArrowRight className="w-3.5 h-3.5 shrink-0" />}
                 </button>
               </div>
             </div>
@@ -88,10 +90,10 @@ export const CareersSection: React.FC = () => {
         </div>
 
         {/* General Application Callout */}
-        <div className="bg-gradient-to-r from-[#0B1929] via-[#0E2035] to-[#0B1929] border border-[#C9A961]/30 rounded-3xl p-8 text-center sm:text-right rtl:sm:text-right ltr:sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="bg-gradient-to-r from-[#0B1929] via-[#0E2035] to-[#0B1929] border border-[#C9A961]/30 rounded-3xl p-5 sm:p-8 text-center sm:text-start flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-2">
-            <h3 className="text-xl font-bold text-white flex items-center justify-center sm:justify-start gap-2">
-              <FileCheck className="w-6 h-6 text-[#C9A961]" />
+            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+              <FileCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#C9A961] shrink-0" />
               <span>{lang === 'ar' ? 'لم تجد الوظيفة المناسبة لمجالك؟' : 'Didn\'t find a matching open role?'}</span>
             </h3>
             <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
@@ -104,14 +106,14 @@ export const CareersSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
             <button
               onClick={() => setIsCareersPageOpen(true)}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#C9A961] hover:bg-[#b3914a] text-[#0B1929] font-bold text-xs shadow-lg cursor-pointer flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl bg-[#C9A961] hover:bg-[#b3914a] text-[#0B1929] font-bold text-xs shadow-lg cursor-pointer flex items-center justify-center gap-2"
             >
-              <Briefcase className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'فتح شاشة الوظائف المستقلة' : 'Open Full Screen Careers Portal'}</span>
+              <Briefcase className="w-4 h-4 shrink-0" />
+              <span>{lang === 'ar' ? 'فتح بوابة التوظيف' : 'Open Careers Portal'}</span>
             </button>
             <button
               onClick={() => openCareerModalWithJob(null)}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-[#0B1929] font-bold text-xs shadow-lg cursor-pointer"
+              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl bg-white hover:bg-slate-100 text-[#0B1929] font-bold text-xs shadow-lg cursor-pointer"
             >
               {lang === 'ar' ? 'رفع الـ CV الآن' : 'Submit General CV'}
             </button>

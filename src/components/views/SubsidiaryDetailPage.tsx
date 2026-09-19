@@ -165,41 +165,45 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
     : [subsidiary.heroImage || subsidiary.logoUrl];
 
   return (
-    <div className="min-h-screen bg-[#060D17] text-slate-100 font-sans relative selection:bg-[#C9A961] selection:text-[#060D17]">
+    <div className={`min-h-screen bg-[#060D17] text-slate-100 relative selection:bg-[#C9A961] selection:text-[#060D17] ${
+      lang === 'ar' ? 'font-arabic' : 'font-sans'
+    }`}>
       {/* 1. DEDICATED SUBSIDIARY NAVBAR */}
       <header className="sticky top-0 z-50 bg-[#0B1929]/90 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
           
           {/* Subsidiary Logo & Brand */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
               onClick={onBack}
-              className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:border-[#C9A961] transition-all flex items-center gap-2 cursor-pointer group"
+              className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:border-[#C9A961] transition-all flex items-center gap-2 cursor-pointer group shrink-0"
               title={lang === 'ar' ? 'العودة للمجموعة الرئيسية' : 'Back to Group'}
             >
               {lang === 'ar' ? (
-                <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
               ) : (
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
               )}
-              <span className="text-xs font-bold hidden sm:inline">
+              <span className="text-xs font-bold hidden md:inline">
                 {lang === 'ar' ? 'الرئيسية' : 'Main Group'}
               </span>
             </button>
 
-            <div className="h-8 w-[1px] bg-slate-800 hidden sm:block" />
+            <div className="h-6 sm:h-8 w-[1px] bg-slate-800 hidden sm:block shrink-0" />
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <img
                 src={subsidiary.logoUrl}
                 alt={subsidiary.nameAr}
-                className="w-11 h-11 rounded-xl object-cover border border-[#C9A961]/40 shadow-lg"
+                className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover border border-[#C9A961]/40 shadow-lg shrink-0"
               />
-              <div>
-                <span className="px-2 py-0.5 rounded bg-[#C9A961]/20 text-[#C9A961] text-[10px] font-bold block w-fit">
+              <div className="min-w-0">
+                <span className="px-2 py-0.5 rounded bg-[#C9A961]/20 text-[#C9A961] text-[10px] font-bold block w-fit truncate">
                   {lang === 'ar' ? subsidiary.badgeAr : subsidiary.badgeEn}
                 </span>
-                <h1 className="text-sm sm:text-base font-bold text-white font-arabic leading-tight">
+                <h1 className={`text-xs sm:text-base font-bold text-white leading-tight truncate ${
+                  lang === 'ar' ? 'font-arabic' : 'font-sans'
+                }`}>
                   {lang === 'ar' ? subsidiary.nameAr : subsidiary.nameEn}
                 </h1>
               </div>
@@ -207,11 +211,11 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
           </div>
 
           {/* Quick Contacts & CTA */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {subsidiary.phone && (
               <a
                 href={`tel:${subsidiary.phone}`}
-                className="hidden md:flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-[#C9A961] transition-colors"
+                className="hidden lg:flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-[#C9A961] transition-colors"
                 dir="ltr"
               >
                 <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-[#C9A961]">
@@ -226,17 +230,17 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
                 const el = document.getElementById('subsidiary-quote');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="px-4 py-2.5 rounded-xl gold-gradient-bg text-[#0B1929] text-xs font-bold shadow-lg hover:brightness-110 transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl gold-gradient-bg text-[#0B1929] text-xs font-bold shadow-lg hover:brightness-110 transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
             >
-              <FileText className="w-4 h-4" />
-              <span>{lang === 'ar' ? 'طلب عرض سعر للشركة' : 'Request Subsidiary Quote'}</span>
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span>{lang === 'ar' ? 'طلب عرض سعر' : 'Get Quote'}</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* 2. DEDICATED SUBSIDIARY HERO BANNER */}
-      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-20 px-4 sm:px-6">
+      <section className="relative min-h-[60vh] sm:min-h-[70vh] flex items-center justify-center overflow-hidden py-14 sm:py-20 px-4 sm:px-6">
         <div
           className="absolute inset-0 bg-cover bg-center filter brightness-[0.35]"
           style={{
@@ -246,21 +250,23 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         <div className="absolute inset-0 bg-gradient-to-t from-[#060D17] via-[#060D17]/70 to-transparent" />
         <div className="absolute inset-0 bg-grid-pattern opacity-30" />
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-4 sm:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C9A961]/15 border border-[#C9A961]/40 text-[#C9A961] text-xs font-bold shadow-xl"
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#C9A961]/15 border border-[#C9A961]/40 text-[#C9A961] text-[11px] sm:text-xs font-bold shadow-xl max-w-full truncate"
           >
-            <Building2 className="w-4 h-4" />
-            <span>{heroSubtitle}</span>
+            <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="truncate">{heroSubtitle}</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-black text-white font-arabic leading-tight"
+            className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight break-words ${
+              lang === 'ar' ? 'font-arabic' : 'font-sans'
+            }`}
           >
             {lang === 'ar' ? subsidiary.nameAr : subsidiary.nameEn}
           </motion.h1>
@@ -269,7 +275,7 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-base sm:text-xl text-[#C9A961] max-w-3xl mx-auto font-medium leading-relaxed"
+            className="text-sm sm:text-lg md:text-xl text-[#C9A961] max-w-3xl mx-auto font-medium leading-relaxed"
           >
             {lang === 'ar' ? subsidiary.taglineAr : subsidiary.taglineEn}
           </motion.p>
@@ -278,7 +284,7 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed"
+            className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed"
           >
             {lang === 'ar' ? subsidiary.descriptionAr : subsidiary.descriptionEn}
           </motion.p>
@@ -288,26 +294,26 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto"
+            className="pt-4 sm:pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto"
           >
-            <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
-              <div className="text-2xl font-bold text-[#C9A961]">+{subsidiary.projectsCount}</div>
-              <div className="text-xs text-slate-400 mt-1">{projectsLabel}</div>
+            <div className="p-3 sm:p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-[#C9A961]">+{subsidiary.projectsCount}</div>
+              <div className="text-[11px] sm:text-xs text-slate-400 mt-1">{projectsLabel}</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
-              <div className="text-2xl font-bold text-[#C9A961]">+{subsidiary.clientsCount}</div>
-              <div className="text-xs text-slate-400 mt-1">{clientsLabel}</div>
+            <div className="p-3 sm:p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-[#C9A961]">+{subsidiary.clientsCount}</div>
+              <div className="text-[11px] sm:text-xs text-slate-400 mt-1">{clientsLabel}</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
-              <div className="text-2xl font-bold text-white">{subsidiary.establishedYear}</div>
-              <div className="text-xs text-slate-400 mt-1">{establishedLabel}</div>
+            <div className="p-3 sm:p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-white">{subsidiary.establishedYear}</div>
+              <div className="text-[11px] sm:text-xs text-slate-400 mt-1">{establishedLabel}</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
-              <div className="text-2xl font-bold text-emerald-400">{complianceRate}</div>
-              <div className="text-xs text-slate-400 mt-1">{complianceLabel}</div>
+            <div className="p-3 sm:p-4 rounded-2xl bg-[#0B1929]/80 border border-slate-800 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-emerald-400">{complianceRate}</div>
+              <div className="text-[11px] sm:text-xs text-slate-400 mt-1">{complianceLabel}</div>
             </div>
           </motion.div>
         </div>
@@ -343,12 +349,14 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         
         {/* OVERVIEW & MISSION */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 items-center">
+            <div className="space-y-4 sm:space-y-6">
               <span className="px-3 py-1 rounded-full bg-[#C9A961]/20 text-[#C9A961] text-xs font-bold">
                 {overviewTag}
               </span>
-              <h2 className="text-2xl sm:text-4xl font-bold text-white font-arabic leading-snug">
+              <h2 className={`text-2xl sm:text-4xl font-bold text-white leading-snug ${
+                lang === 'ar' ? 'font-arabic' : 'font-sans'
+              }`}>
                 {overviewTitle}
               </h2>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
@@ -371,12 +379,12 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
               <img
                 src={subsidiary.overviewImage || subsidiary.heroImage || subsidiary.logoUrl}
                 alt={subsidiary.nameAr}
-                className="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-[300px] sm:h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#060D17] via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-[#0B1929]/90 backdrop-blur-md border border-slate-800">
+              <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 p-4 sm:p-6 rounded-2xl bg-[#0B1929]/90 backdrop-blur-md border border-slate-800">
                 <div className="text-[#C9A961] font-bold text-xs">{lang === 'ar' ? 'تاريخ التأسيس والخبرة' : 'Est. Legacy'}</div>
-                <div className="text-white text-base font-bold mt-1">
+                <div className="text-white text-sm sm:text-base font-bold mt-1">
                   {overviewNote}
                 </div>
               </div>
@@ -388,7 +396,9 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         {activeTab === 'services' && (
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
+              <h2 className={`text-2xl sm:text-3xl font-bold text-white ${
+                lang === 'ar' ? 'font-arabic' : 'font-sans'
+              }`}>
                 {servicesTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
@@ -401,11 +411,13 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
                 const title = lang === 'ar' ? srv.titleAr : srv.titleEn;
                 const desc = lang === 'ar' ? (srv.descAr || 'حلول تنفيذية وفق أعلى المعايير القياسية العالمية.') : (srv.descEn || 'Operational delivery adhering to top industry standards.');
                 return (
-                  <div key={srv.id || idx} className="p-6 rounded-2xl bg-[#0B1929] border border-slate-800 hover:border-[#C9A961]/50 transition-all space-y-4">
-                    <div className="w-12 h-12 rounded-xl gold-gradient-bg text-[#0B1929] flex items-center justify-center font-black text-lg shadow-md">
+                  <div key={srv.id || idx} className="p-5 sm:p-6 rounded-2xl bg-[#0B1929] border border-slate-800 hover:border-[#C9A961]/50 transition-all space-y-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl gold-gradient-bg text-[#0B1929] flex items-center justify-center font-black text-base sm:text-lg shadow-md">
                       0{idx + 1}
                     </div>
-                    <h3 className="text-lg font-bold text-white font-arabic">{title}</h3>
+                    <h3 className={`text-base sm:text-lg font-bold text-white ${
+                      lang === 'ar' ? 'font-arabic' : 'font-sans'
+                    }`}>{title}</h3>
                     <p className="text-xs text-slate-400 leading-relaxed">
                       {desc}
                     </p>
@@ -433,7 +445,9 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         {activeTab === 'certifications' && (
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
+              <h2 className={`text-2xl sm:text-3xl font-bold text-white ${
+                lang === 'ar' ? 'font-arabic' : 'font-sans'
+              }`}>
                 {certificationsTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
@@ -441,13 +455,15 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {currentCerts.map((cert, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-[#0B1929] border border-slate-800 text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-[#C9A961]/20 text-[#C9A961] flex items-center justify-center mx-auto">
-                    <Award className="w-6 h-6" />
+                <div key={idx} className="p-5 sm:p-6 rounded-2xl bg-[#0B1929] border border-slate-800 text-center space-y-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#C9A961]/20 text-[#C9A961] flex items-center justify-center mx-auto">
+                    <Award className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h4 className="text-sm font-bold text-white font-arabic">{cert}</h4>
+                  <h4 className={`text-sm font-bold text-white ${
+                    lang === 'ar' ? 'font-arabic' : 'font-sans'
+                  }`}>{cert}</h4>
                   <span className="text-[10px] text-emerald-400 font-semibold block">{certificationsStatus}</span>
                 </div>
               ))}
@@ -459,7 +475,9 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         {activeTab === 'gallery' && (
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
+              <h2 className={`text-2xl sm:text-3xl font-bold text-white ${
+                lang === 'ar' ? 'font-arabic' : 'font-sans'
+              }`}>
                 {galleryTitle}
               </h2>
               {gallerySubtitle && (
@@ -469,9 +487,9 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {currentGallery.map((img, idx) => (
-                <div key={idx} className="rounded-2xl overflow-hidden border border-slate-800 group h-64">
+                <div key={idx} className="rounded-2xl overflow-hidden border border-slate-800 group h-52 sm:h-64">
                   <img
                     src={img}
                     alt="Gallery"
@@ -484,12 +502,14 @@ export const SubsidiaryDetailPage: React.FC<Props> = ({ subsidiary: initialSubsi
         )}
 
         {/* CONTACT & DIRECT QUOTE FORM */}
-        <div id="subsidiary-quote" className="p-8 sm:p-12 rounded-3xl bg-[#0B1929] border border-[#C9A961]/40 space-y-8 shadow-2xl">
+        <div id="subsidiary-quote" className="p-5 sm:p-8 md:p-12 rounded-3xl bg-[#0B1929] border border-[#C9A961]/40 space-y-6 sm:space-y-8 shadow-2xl">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="px-3 py-1 rounded-full bg-[#C9A961]/20 text-[#C9A961] text-xs font-bold">
               {quoteBadge}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white font-arabic">
+            <h2 className={`text-xl sm:text-3xl font-bold text-white ${
+              lang === 'ar' ? 'font-arabic' : 'font-sans'
+            }`}>
               {quoteTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400">

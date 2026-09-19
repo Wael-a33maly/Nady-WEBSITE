@@ -17,6 +17,13 @@
     scroll-behavior: smooth;
     scroll-padding-top: 6.5rem;
     font-family: var(--font-arabic);
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   html[lang="en"] {
@@ -203,5 +210,23 @@
 
 .gold-glow-hover:hover {
   box-shadow: 0 0 35px rgba(201, 169, 97, 0.4);
+}
+
+/* 3D Flip Card Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 

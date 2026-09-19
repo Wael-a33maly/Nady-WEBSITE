@@ -17,6 +17,7 @@ export const TeamManager: React.FC = () => {
   const [image, setImage] = useState('');
   const [bioAr, setBioAr] = useState('');
   const [bioEn, setBioEn] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [linkedin, setLinkedin] = useState('');
 
@@ -29,6 +30,7 @@ export const TeamManager: React.FC = () => {
     setImage('https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80');
     setBioAr('');
     setBioEn('');
+    setPhone('');
     setEmail('');
     setLinkedin('');
     setIsModalOpen(true);
@@ -43,6 +45,7 @@ export const TeamManager: React.FC = () => {
     setImage(member.image);
     setBioAr(member.bioAr);
     setBioEn(member.bioEn);
+    setPhone(member.phone || '');
     setEmail(member.email || '');
     setLinkedin(member.linkedin || '');
     setIsModalOpen(true);
@@ -61,6 +64,7 @@ export const TeamManager: React.FC = () => {
         image: image || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80',
         bioAr,
         bioEn: bioEn || bioAr,
+        phone,
         email,
         linkedin,
       });
@@ -74,6 +78,7 @@ export const TeamManager: React.FC = () => {
         image: image || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80',
         bioAr,
         bioEn: bioEn || bioAr,
+        phone,
         email,
         linkedin,
       });
@@ -134,13 +139,32 @@ export const TeamManager: React.FC = () => {
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2 text-slate-500 text-xs">
+                {member.phone && (
+                  <a
+                    href={`tel:${member.phone.replace(/\s+/g, '')}`}
+                    className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white transition-colors"
+                    title={member.phone}
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                  </a>
+                )}
                 {member.email && (
-                  <a href={`mailto:${member.email}`} className="hover:text-[#C9A961]">
+                  <a
+                    href={`mailto:${member.email}`}
+                    className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#C9A961] transition-colors"
+                    title={member.email}
+                  >
                     <Mail className="w-3.5 h-3.5" />
                   </a>
                 )}
                 {member.linkedin && (
-                  <a href={member.linkedin} target="_blank" rel="noreferrer" className="hover:text-[#C9A961]">
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#C9A961] transition-colors"
+                    title="LinkedIn"
+                  >
                     <Linkedin className="w-3.5 h-3.5" />
                   </a>
                 )}
@@ -243,7 +267,25 @@ export const TeamManager: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="font-semibold block mb-1 flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                    <Phone className="w-3.5 h-3.5" />
+                    <span>{lang === 'ar' ? 'رقم الهاتف المباشر *' : 'Direct Phone / Mobile'}</span>
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+966 50 123 4567"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 focus:border-[#C9A961] focus:outline-none"
+                    dir="ltr"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-1 block">
+                    {lang === 'ar' ? 'يظهر زر اتصال مباشر مميز في بطاقة القائد' : 'Enables featured direct-call button'}
+                  </span>
+                </div>
+
                 <div>
                   <label className="font-semibold block mb-1">{lang === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}</label>
                   <input

@@ -16,15 +16,18 @@ export const PrivacyModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 rtl:right-4 ltr:left-4 p-2.5 rounded-full bg-slate-900 border border-slate-800 hover:text-[#C9A961] cursor-pointer"
+          className="absolute top-3 sm:top-4 rtl:left-3 sm:rtl:left-4 ltr:right-3 sm:ltr:right-4 p-2 sm:p-2.5 rounded-full bg-slate-900 border border-slate-800 hover:text-[#C9A961] cursor-pointer"
+          aria-label={lang === 'ar' ? 'إغلاق' : 'Close'}
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-          <ShieldCheck className="w-8 h-8 text-[#C9A961]" />
+          <ShieldCheck className="w-7 h-7 sm:w-8 sm:h-8 text-[#C9A961] shrink-0" />
           <div>
-            <h3 className="text-xl font-bold">
+            <h3 className={`text-lg sm:text-xl font-bold ${
+              lang === 'ar' ? 'font-arabic' : 'font-sans'
+            }`}>
               {lang === 'ar' ? 'سياسة الخصوصية والشروط والأحكام' : 'Privacy Policy & Terms'}
             </h3>
             <p className="text-xs text-slate-400">
@@ -33,7 +36,9 @@ export const PrivacyModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </div>
         </div>
 
-        <div className="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed max-h-[60vh] overflow-y-auto pr-2 font-arabic">
+        <div className={`space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed max-h-[60vh] overflow-y-auto pr-2 ${
+          lang === 'ar' ? 'font-arabic' : 'font-sans'
+        }`}>
           <p>
             {lang === 'ar'
               ? `تلتزم ${settings.companyNameAr || 'شركة المحيط الفضي'} بحماية بيانات جميع عملائنا والممثلين الرسميين للشركات. جميع البيانات والمعلومات الواردة في طلبات عروض الأسعار تُعامل بسرية تامة ووفق الأنظمة واللوائح المعمول بها بالمملكة.`

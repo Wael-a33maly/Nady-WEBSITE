@@ -72,7 +72,7 @@ export const ContactSection: React.FC = () => {
   ];
 
   return (
-    <section id="contact" className={`py-24 relative transition-colors overflow-hidden ${
+    <section id="contact" className={`py-14 sm:py-20 lg:py-24 relative transition-colors overflow-hidden ${
       theme === 'dark' ? 'bg-[#08121f]' : 'bg-slate-100/70'
     }`}>
       <div className="max-w-7xl 2xl:max-w-[1650px] 3xl:max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
@@ -88,7 +88,7 @@ export const ContactSection: React.FC = () => {
         />
 
         {/* Info Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 sm:mt-14 mb-8 sm:mb-14">
           {contactCards.map((card, idx) => {
             const Icon = card.icon;
             return (
@@ -99,7 +99,7 @@ export const ContactSection: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -6 }}
-                className={`p-6 rounded-2xl border transition-all duration-300 space-y-4 group relative overflow-hidden flex flex-col justify-between ${
+                className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 space-y-3 sm:space-y-4 group relative overflow-hidden flex flex-col justify-between ${
                   theme === 'dark'
                     ? 'bg-[#112236] border-[#C9A961]/30 shadow-xl shadow-black/40 hover:border-[#C9A961] hover:shadow-2xl hover:shadow-[#C9A961]/20'
                     : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:border-[#C9A961] hover:shadow-2xl'
@@ -110,22 +110,22 @@ export const ContactSection: React.FC = () => {
 
                 <div className="space-y-3 relative z-10">
                   <div
-                    className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-300 shadow-lg ${
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl border flex items-center justify-center transition-all duration-300 shadow-lg ${
                       theme === 'dark'
                         ? 'bg-gradient-to-br from-[#1A314D] to-[#0F2338] border-[#C9A961]/50 text-[#C9A961] group-hover:bg-[#C9A961] group-hover:text-[#0B1929] group-hover:scale-110 shadow-[#C9A961]/15'
                         : 'bg-slate-100 border-[#C9A961]/40 text-[#C9A961] group-hover:bg-[#C9A961] group-hover:text-[#0B1929] group-hover:scale-110 shadow-slate-300/40'
                     }`}
                   >
-                    <Icon className="w-6 h-6 stroke-[2]" />
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
                   </div>
 
-                  <h4 className={`font-black text-base group-hover:text-[#C9A961] transition-colors leading-snug ${
+                  <h4 className={`font-black text-sm sm:text-base group-hover:text-[#C9A961] transition-colors leading-snug break-words ${
                     theme === 'dark' ? 'text-white' : 'text-slate-900'
                   }`}>
                     {lang === 'ar' ? card.titleAr : card.titleEn}
                   </h4>
 
-                  <p className={`text-xs leading-relaxed font-semibold ${
+                  <p className={`text-xs leading-relaxed font-semibold break-words ${
                     theme === 'dark' ? 'text-slate-200' : 'text-slate-600'
                   }`}>
                     {lang === 'ar' ? card.detailAr : card.detailEn}
@@ -137,19 +137,19 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Map & Inquiry Form Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
           {/* Map Column */}
           <motion.div
             initial={{ opacity: 0, x: lang === 'ar' ? 20 : -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className={`lg:col-span-6 rounded-3xl overflow-hidden border p-3 flex flex-col justify-between min-h-[420px] shadow-xl ${
+            className={`lg:col-span-6 rounded-3xl overflow-hidden border p-3 flex flex-col justify-between min-h-[340px] sm:min-h-[420px] shadow-xl ${
               theme === 'dark'
                 ? 'bg-[#112236] border-[#C9A961]/30 shadow-black/40'
                 : 'bg-white border-slate-200 shadow-slate-200/50'
             }`}
           >
-            <div className="relative w-full h-full min-h-[380px] rounded-2xl overflow-hidden">
+            <div className="relative w-full h-full min-h-[320px] sm:min-h-[380px] rounded-2xl overflow-hidden">
               <LeafletMap />
             </div>
           </motion.div>
@@ -159,14 +159,14 @@ export const ContactSection: React.FC = () => {
             initial={{ opacity: 0, x: lang === 'ar' ? -20 : 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className={`lg:col-span-6 rounded-3xl border p-8 sm:p-10 flex flex-col justify-between shadow-xl ${
+            className={`lg:col-span-6 rounded-3xl border p-5 sm:p-8 md:p-10 flex flex-col justify-between shadow-xl ${
               theme === 'dark'
                 ? 'bg-[#112236] border-[#C9A961]/30 shadow-black/40'
                 : 'bg-white border-slate-200 shadow-slate-200/50'
             }`}
           >
             <form onSubmit={handleSubmitInquiry} className="space-y-4">
-              <h3 className={`text-2xl font-black ${
+              <h3 className={`text-xl sm:text-2xl font-black ${
                 theme === 'dark' ? 'text-white' : 'text-slate-900'
               }`}>
                 {lang === 'ar' ? 'أرسل استفسارك المباشر' : 'Send Quick Message'}

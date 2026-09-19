@@ -83,8 +83,12 @@ export interface WhyUsFeature {
 export interface ClientLogo {
   id: string;
   name: string;
+  nameAr?: string;
+  nameEn?: string;
   logoUrl: string;
   category: string;
+  categoryAr?: string;
+  categoryEn?: string;
 }
 
 export interface SubsidiaryCategory {
@@ -316,6 +320,9 @@ export interface SiteSettings {
   cardBorderDark?: string;
   cardBorderLight?: string;
   cardRadiusPx?: number;
+  
+  // Client & Partners Display Mode on Frontend
+  clientDisplayMode?: 'marquee' | 'grid';
   
   // Hero Section Customization
   heroBadgeAr: string;

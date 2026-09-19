@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
             {/* Column 1: Brand Info */}
             <div className="lg:col-span-4 space-y-5">
               <BrandLogo />
-              <p className="text-xs text-slate-400 leading-relaxed max-w-sm font-arabic">
+              <p className={`text-xs text-slate-400 leading-relaxed max-w-sm ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
                 {lang === 'ar'
                   ? `شركة ${settings.logoTextAr || 'المحيط الفضي'} - حلول أمن ونظافة متكاملة تحت سقف واحد بكوادر مؤهلة معتمدة وأحدث التقنيات الذكية معتمدة ISO.`
                   : `${settings.logoTextEn || 'Silver Ocean'} Co. - Integrated guarding & commercial sanitation engineered for modern enterprises.`}
@@ -211,8 +211,8 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 text-center sm:text-start">
+            <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
               <span className="text-slate-400">
                 {lang === 'ar' ? `جميع الحقوق محفوظة © ${new Date().getFullYear()} لـ` : `© ${new Date().getFullYear()} All Rights Reserved by`}
               </span>
@@ -221,7 +221,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6">
               <a
                 href="/admin"
                 onClick={navigateToAdmin}
@@ -233,15 +233,16 @@ export const Footer: React.FC = () => {
 
               <button
                 onClick={() => setPrivacyModalOpen(true)}
-                className="hover:text-[#C9A961] transition-colors"
+                className="hover:text-[#C9A961] transition-colors cursor-pointer"
               >
                 {lang === 'ar' ? 'سياسة الخصوصية والشروط' : 'Privacy & Terms'}
               </button>
 
               <button
                 onClick={scrollToTop}
-                className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-[#C9A961] flex items-center justify-center transition-all"
+                className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-[#C9A961] flex items-center justify-center transition-all cursor-pointer"
                 title="Back to Top"
+                aria-label="Back to Top"
               >
                 <ArrowUp className="w-4 h-4" />
               </button>

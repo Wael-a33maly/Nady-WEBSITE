@@ -95,26 +95,26 @@ export const SubsidiariesSection: React.FC = () => {
             >
               <div>
                 {/* Header Row */}
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 flex items-center justify-center group-hover:border-[#C9A961] transition-all overflow-hidden shrink-0">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-5">
+                  <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 sm:p-2.5 flex items-center justify-center group-hover:border-[#C9A961] transition-all overflow-hidden shrink-0">
                       {sub.logoUrl ? (
                         <img src={sub.logoUrl} alt={sub.nameAr} className="w-full h-full object-cover rounded-lg" />
                       ) : (
                         getIcon(sub.iconName)
                       )}
                     </div>
-                    <div>
-                      <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#C9A961]/15 text-[#C9A961] text-[11px] font-bold border border-[#C9A961]/30 mb-1">
+                    <div className="min-w-0 flex-1">
+                      <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#C9A961]/15 text-[#C9A961] text-[10px] sm:text-[11px] font-bold border border-[#C9A961]/30 mb-1">
                         {lang === 'ar' ? sub.badgeAr || 'شركة تابعة' : sub.badgeEn || 'Subsidiary'}
                       </span>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#C9A961] transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#C9A961] transition-colors break-words">
                         {lang === 'ar' ? sub.nameAr : sub.nameEn}
                       </h3>
                     </div>
                   </div>
 
-                  <span className="text-xs font-mono text-slate-600 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/60 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700/50">
+                  <span className="self-start sm:self-auto text-xs font-mono text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700/50 shrink-0">
                     Est. {sub.establishedYear}
                   </span>
                 </div>
@@ -143,16 +143,16 @@ export const SubsidiariesSection: React.FC = () => {
                 </div>
 
                 {/* Stats Bar */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800 text-center mb-6">
-                  <div className="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <div className="text-lg font-extrabold text-[#C9A961] font-mono">+{sub.projectsCount}</div>
-                    <div className="text-[11px] text-slate-600 dark:text-slate-400">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-slate-200 dark:border-slate-800 text-center mb-6">
+                  <div className="bg-slate-50 dark:bg-slate-950/60 p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div className="text-base sm:text-lg font-extrabold text-[#C9A961] font-mono">+{sub.projectsCount}</div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                       {lang === 'ar' ? 'مشروع منفذ' : 'Projects Done'}
                     </div>
                   </div>
-                  <div className="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <div className="text-lg font-extrabold text-blue-600 dark:text-blue-400 font-mono">+{sub.clientsCount}</div>
-                    <div className="text-[11px] text-slate-600 dark:text-slate-400">
+                  <div className="bg-slate-50 dark:bg-slate-950/60 p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div className="text-base sm:text-lg font-extrabold text-blue-600 dark:text-blue-400 font-mono">+{sub.clientsCount}</div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                       {lang === 'ar' ? 'عميل دائم' : 'Active Clients'}
                     </div>
                   </div>
@@ -160,19 +160,19 @@ export const SubsidiariesSection: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex items-center gap-2 sm:gap-3 pt-2">
                 <button
                   onClick={() => setActiveSubsidiaryView(sub)}
-                  className="flex-1 py-2.5 px-4 rounded-xl gold-gradient-bg text-[#0B1929] hover:brightness-110 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#C9A961]/20 cursor-pointer"
+                  className="flex-1 py-2.5 px-3 sm:px-4 rounded-xl gold-gradient-bg text-[#0B1929] hover:brightness-110 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#C9A961]/20 cursor-pointer min-w-0"
                 >
-                  <Briefcase className="w-4 h-4 text-[#0B1929]" />
-                  <span>{lang === 'ar' ? 'الانتقال لصفحة الشركة التابعة' : 'Visit Subsidiary Page'}</span>
-                  {lang === 'ar' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                  <Briefcase className="w-4 h-4 text-[#0B1929] shrink-0" />
+                  <span className="truncate">{lang === 'ar' ? 'الانتقال لصفحة الشركة التابعة' : 'Visit Subsidiary Page'}</span>
+                  {lang === 'ar' ? <ArrowLeft className="w-3.5 h-3.5 shrink-0" /> : <ArrowRight className="w-3.5 h-3.5 shrink-0" />}
                 </button>
 
                 <button
                   onClick={() => setSelectedSub(sub)}
-                  className="py-2.5 px-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-all border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0"
+                  className="py-2.5 px-3 sm:px-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-all border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0"
                   title={lang === 'ar' ? 'معاينة سريعة' : 'Quick Preview'}
                 >
                   <ExternalLink className="w-4 h-4 text-[#C9A961]" />
@@ -196,7 +196,8 @@ export const SubsidiariesSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedSub(null)}
-                className="absolute top-4 left-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 cursor-pointer"
+                className="absolute top-4 ltr:right-4 rtl:left-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 cursor-pointer z-10"
+                aria-label="Close"
               >
                 <X className="w-5 h-5" />
               </button>

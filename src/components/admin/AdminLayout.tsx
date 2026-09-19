@@ -40,10 +40,11 @@ import {
   LogOut,
   ChevronLeft,
   SlidersHorizontal,
+  Quote,
 } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
-  const { lang, setLang, quotes, inquiries, jobApplications, theme, toggleTheme, logoutAdmin, settings } = useApp();
+  const { lang, setLang, quotes, inquiries, jobApplications, testimonials, theme, toggleTheme, logoutAdmin, settings } = useApp();
 
   const navigateToHome = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -64,6 +65,7 @@ export const AdminLayout: React.FC = () => {
     | 'categories'
     | 'whyUs'
     | 'partners'
+    | 'testimonials'
     | 'services'
     | 'projects'
     | 'team'
@@ -115,9 +117,16 @@ export const AdminLayout: React.FC = () => {
     },
     {
       id: 'partners',
-      labelAr: 'شركاء النجاح وآراء العملاء',
-      labelEn: 'Partners & Client Reviews',
+      labelAr: 'شركاء النجاح وشعارات الشركات',
+      labelEn: 'Corporate Clients & Logos',
       icon: Handshake,
+    },
+    {
+      id: 'testimonials',
+      labelAr: 'آراء وتقييمات العملاء',
+      labelEn: 'Client Testimonials & Reviews',
+      icon: Quote,
+      count: testimonials.length,
     },
     {
       id: 'services',
@@ -333,7 +342,8 @@ export const AdminLayout: React.FC = () => {
         {activeTab === 'subsidiaries' && <SubsidiariesManager />}
         {activeTab === 'categories' && <CategoriesManager />}
         {activeTab === 'whyUs' && <WhyUsManager />}
-        {activeTab === 'partners' && <PartnersManager />}
+        {activeTab === 'partners' && <PartnersManager initialSubTab="logos" />}
+        {activeTab === 'testimonials' && <PartnersManager initialSubTab="testimonials" />}
         {activeTab === 'services' && <ServicesManager />}
         {activeTab === 'projects' && <ProjectsManager />}
         {activeTab === 'team' && <TeamManager />}

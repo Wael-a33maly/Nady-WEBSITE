@@ -136,11 +136,11 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
         )}
 
         {/* Main Glass Form Container */}
-        <div className={`mt-8 bg-white dark:bg-[#112236]/90 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-[#C9A961]/30 p-6 sm:p-10 shadow-2xl relative ${isModal ? 'border-none bg-transparent dark:bg-transparent shadow-none p-0' : ''}`}>
+        <div className={`mt-8 bg-white dark:bg-[#112236]/90 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-[#C9A961]/30 p-4 sm:p-7 md:p-10 shadow-2xl relative ${isModal ? 'border-none bg-transparent dark:bg-transparent shadow-none p-0' : ''}`}>
           {/* Step Progress Bar */}
           {!isSubmitted && (
-            <div className="mb-10">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-3">
+            <div className="mb-6 sm:mb-10">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-300 mb-3 gap-2">
                 <span className={step >= 1 ? 'text-[#C9A961] font-bold' : ''}>
                   1. {lang === 'ar' ? 'اختيار الخدمة' : 'Service Type'}
                 </span>
@@ -281,7 +281,7 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
                 <div className="pt-6 flex justify-end">
                   <button
                     onClick={handleNextStep}
-                    className="px-8 py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center gap-2 cursor-pointer shadow-lg hover:brightness-110"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-110"
                   >
                     <span>{lang === 'ar' ? 'التالي: بيانات المنشأة والتواصل' : 'Next: Facility & Contact Info'}</span>
                     {lang === 'ar' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -421,11 +421,11 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
                   />
                 </div>
 
-                <div className="pt-6 flex items-center justify-between gap-4">
+                <div className="pt-6 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="px-6 py-3 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-semibold cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-semibold cursor-pointer text-center"
                   >
                     {lang === 'ar' ? 'السابق' : 'Back'}
                   </button>
@@ -433,9 +433,9 @@ export const QuoteRequestSection: React.FC<QuoteRequestSectionProps> = ({
                   <button
                     type="button"
                     onClick={handleSubmit}
-                    className="px-8 py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center gap-2 cursor-pointer shadow-xl hover:brightness-110"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-xl gold-gradient-bg text-[#0B1929] font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xl hover:brightness-110"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4 shrink-0" />
                     <span>{lang === 'ar' ? 'إرسال طلب عرض السعر' : 'Submit Proposal Request'}</span>
                   </button>
                 </div>

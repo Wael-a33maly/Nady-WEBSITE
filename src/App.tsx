@@ -72,13 +72,13 @@ export function App() {
   if (isExplicitAdminRoute) {
     if (!isAdmin) {
       return (
-        <div className={theme}>
+        <div className={`${theme} ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
           <AdminLogin />
         </div>
       );
     }
     return (
-      <div className={theme}>
+      <div className={`${theme} ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
         <AdminLayout />
       </div>
     );
@@ -87,7 +87,7 @@ export function App() {
   // If viewing a standalone subsidiary page
   if (activeSubsidiaryView) {
     return (
-      <div className={theme}>
+      <div className={`${theme} ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
         <CustomCursor />
         <MouseSpotlight />
         <SubsidiaryDetailPage
@@ -102,7 +102,7 @@ export function App() {
   // If viewing standalone Careers Page
   if (isExplicitCareersRoute) {
     return (
-      <div className={theme}>
+      <div className={`${theme} ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
         <CustomCursor />
         <MouseSpotlight />
         <CareersPage
@@ -120,7 +120,7 @@ export function App() {
 
   // Standard Public Landing Page
   return (
-    <div className={`min-h-screen transition-colors duration-300 font-arabic ${theme === 'dark' ? 'bg-[#0B1929] text-white' : 'bg-[#F8FAFC] text-slate-900'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${lang === 'ar' ? 'font-arabic' : 'font-sans'} ${theme === 'dark' ? 'bg-[#0B1929] text-white' : 'bg-[#F8FAFC] text-slate-900'}`}>
       <CustomCursor />
       <MouseSpotlight />
       <Navbar />

@@ -51,6 +51,7 @@ export interface AdminDashboardProps {
       | 'categories'
       | 'whyUs'
       | 'partners'
+      | 'testimonials'
       | 'services'
       | 'projects'
       | 'team'
