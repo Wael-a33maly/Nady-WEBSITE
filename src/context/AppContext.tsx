@@ -213,9 +213,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     try {
-      return (localStorage.getItem('hn_theme') as ThemeMode) || 'dark';
+      return (localStorage.getItem('hn_theme') as ThemeMode) || 'light';
     } catch {
-      return 'dark';
+      return 'light';
     }
   });
 
